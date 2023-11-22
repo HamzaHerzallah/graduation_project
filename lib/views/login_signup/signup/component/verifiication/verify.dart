@@ -110,6 +110,7 @@ class _PageverifiedState extends State<Pageverified> {
                     if (auth.currentUser.emailVerified) {
                       final isBuyer = await buyer.isBuyer(widget.email);
                       if (isBuyer) {
+                        buyer.loadBuyerData();
                         // ignore: use_build_context_synchronously
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -121,6 +122,7 @@ class _PageverifiedState extends State<Pageverified> {
                       }
                       final isSeller = await seller.isSeller(widget.email);
                       if (isSeller) {
+                        seller.loadSellerData();
                         // ignore: use_build_context_synchronously
                         Navigator.pushAndRemoveUntil(
                           context,

@@ -11,7 +11,7 @@ class RadiusSelectSellerOrBuyer extends StatelessWidget {
       height: MediaQuery.of(context).size.height / 6,
       decoration: BoxDecoration(
           gradient: const LinearGradient(
-              colors: [Colors.white, Colors.white12],
+              colors: [Colors.white, Colors.blue],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter),
           borderRadius: BorderRadius.circular(100)),

@@ -6,11 +6,12 @@ class CustomTheme {
   static String? fontFamilyApp = GoogleFonts.sansita().fontFamily;
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData.light().copyWith(
-      scaffoldBackgroundColor: AppColors.prColorblue,
+      // scaffoldBackgroundColor: AppColors.prColorblue,
+      scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         elevation: 0,
         color: AppColors.prColorblue,
-        foregroundColor: AppColors.bgWhite,
+        foregroundColor: AppColors.bgwhite,
         centerTitle: true,
         iconTheme: IconThemeData(color: AppColors.bgWhite),
         titleTextStyle: TextStyle(
@@ -22,7 +23,7 @@ class CustomTheme {
       ),
       hintColor: AppColors.blueAccent1,
       textTheme: Theme.of(context).textTheme.apply(
-            bodyColor: AppColors.bgwhite,
+            bodyColor: AppColors.bgBlue,
             displayColor: AppColors.textColor200,
             fontFamily: fontFamilyApp,
           ),

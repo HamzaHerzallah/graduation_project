@@ -12,7 +12,7 @@ class SellerFirestore extends ChangeNotifier {
       FirebaseFirestore.instance.collection('Sellers');
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  SellerModel? seller;
+  ItemModel? seller;
   bool isLoading = false;
   String errorMessage = '';
 
@@ -26,8 +26,13 @@ class SellerFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addSeller(
-      {username, email, category, phoneNumber, projectName}) async {
+  Future<void> addSeller({
+    username,
+    email,
+    category,
+    phoneNumber,
+    projectName,
+  }) async {
     Map<String, dynamic> userData = {
       'username': username,
       'email': email,
@@ -36,8 +41,9 @@ class SellerFirestore extends ChangeNotifier {
       'projectName': projectName,
       'category': category,
     };
-
-    await _sellerCollection.add(userData);
+    DocumentReference docRef = await _sellerCollection.add(userData);
+    String sellerId = docRef.id;
+    await _sellerCollection.doc(sellerId).update({'sellerId': sellerId});
   }
 
   Future<bool> isSeller(String email) async {
@@ -56,10 +62,10 @@ class SellerFirestore extends ChangeNotifier {
   Future<void> loadSellerData() async {
     final User user = UserAuth().currentUser;
     QuerySnapshot querySnapshot = await _sellerCollection
-        .where('email', isEqualTo: user.uid)
+        .where('email', isEqualTo: user.email)
         .limit(1)
         .get();
-    seller = SellerModel.fromMap(
+    seller = ItemModel.fromMap(
         querySnapshot.docs.first.data() as Map<String, dynamic>);
     notifyListeners();
   }

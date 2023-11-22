@@ -1,12 +1,18 @@
 class ItemModel {
   ItemModel(
-      {this.sellerId, this.itemId, this.description, this.title, this.price});
+      {this.sellerId,
+      this.itemId,
+      this.description,
+      this.title,
+      this.price,
+      this.image});
 
   String? sellerId;
   String? itemId;
   String? title;
   String? price;
   String? description;
+  String? image;
 
   ItemModel.fromMap(Map<String, dynamic> data)
       : assert(data.isNotEmpty),
@@ -14,6 +20,7 @@ class ItemModel {
         itemId = data['itemId'],
         title = data['title'],
         price = data['price'],
+        image = data['image'],
         description = data['description'];
 
   Map<String, dynamic> toMap() {
@@ -22,6 +29,7 @@ class ItemModel {
     data['itemId'] = itemId;
     data['title'] = title;
     data['price'] = price;
+    data['image'] = image;
     data['description'] = description;
     return data;
   }

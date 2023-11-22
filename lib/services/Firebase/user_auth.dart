@@ -51,30 +51,17 @@ class UserAuth extends ChangeNotifier {
     }
   }
 
-  Future<User?>? get login async {
+  Future<User?> login(String email, String password) async {
     try {
-      isLoading = true;
-      UserCredential authResult = await _auth.signInWithEmailAndPassword(
-        email: userData.email,
-        password: userData.password,
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      late User user;
-      if (authResult.user?.uid.isNotEmpty ?? false) {
-        user = authResult.user!;
-        setLoading = false;
-      }
-      return user;
-    } on SocketException {
-      setLoading = false;
-      setMessage = 'No Internet';
-    } on FirebaseAuthException catch (error) {
-      setLoading = false;
-      setMessage = error.message ?? '';
+      return userCredential.user;
     } catch (e) {
-      setLoading = false;
-      setMessage = e.toString();
+      setMessage = '$e';
+      return null;
     }
-    return null;
   }
 
   Future<void> resetPassword(String? email) async {

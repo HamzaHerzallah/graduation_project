@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Models/seller_model.dart';
 
 import '../../models/buyer_model.dart';
 import 'user_auth.dart';
 
-class BuyersFirestore extends ChangeNotifier {
-  final CollectionReference _buyerCollection =
-      FirebaseFirestore.instance.collection('Buyers');
+class ItemFirestore extends ChangeNotifier {
+  final CollectionReference _itemCollection =
+      FirebaseFirestore.instance.collection('Items');
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  BuyerModel? buyer;
+  ItemModel? item;
   bool isLoading = false;
   String errorMessage = '';
 
@@ -25,43 +26,37 @@ class BuyersFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addBuyer({username, email}) async {
-    Map<String, dynamic> userData = {
-      'username': username,
-      'email': email,
-      'profilePicture': '',
-      'cart': [],
+  Future<void> addItem({
+    price,
+    description,
+    title,
+    image,
+    sellerId,
+  }) async {
+    Map<String, dynamic> itemData = {
+      'price': price,
+      'description': description,
+      'image': image,
+      'sellerId': sellerId,
+      'title': title,
     };
-    DocumentReference docRef = await _buyerCollection.add(userData);
-    String buyerId = docRef.id;
-    await _buyerCollection.doc(buyerId).update({'buyerId': buyerId});
+    DocumentReference docRef = await _itemCollection.add(itemData);
+    String itemId = docRef.id;
+    await _itemCollection.doc(itemId).update({'itemId': itemId});
   }
 
-  Future<bool> isBuyer(String email) async {
-    try {
-      QuerySnapshot querySnapshot = await _buyerCollection
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
-      return querySnapshot.docs.isNotEmpty;
-    } catch (e) {
-      print('Error checking user existence: $e');
-      return false;
-    }
-  }
-
-  Future<void> loadBuyerData() async {
+  Future<void> loadSellerData() async {
     final User user = UserAuth().currentUser;
-    QuerySnapshot querySnapshot = await _buyerCollection
+    QuerySnapshot querySnapshot = await _itemCollection
         .where('email', isEqualTo: user.email)
         .limit(1)
         .get();
-    buyer = BuyerModel.fromMap(
+    item = ItemModel.fromMap(
         querySnapshot.docs.first.data() as Map<String, dynamic>);
     notifyListeners();
   }
 
-  Future<void> updateBuyerData(
+  Future<void> updateSellerData(
       {bool? registered,
       String? path,
       bool? hasTeam,
@@ -72,7 +67,7 @@ class BuyersFirestore extends ChangeNotifier {
       List<dynamic>? canDo,
       List<dynamic>? chats}) async {
     final User user = UserAuth().currentUser;
-    final docSnap = await _buyerCollection
+    final docSnap = await _itemCollection
         .where('studentUID', isEqualTo: user.uid)
         .limit(1)
         .get();
@@ -104,7 +99,7 @@ class BuyersFirestore extends ChangeNotifier {
     if (chats != null) {
       doc.reference.update({'chats': chats});
     }
-    loadBuyerData();
+    loadSellerData();
   }
 
   Future<void> updateStudentByID(
@@ -113,7 +108,7 @@ class BuyersFirestore extends ChangeNotifier {
       List<dynamic>? chats,
       bool? hasTeam,
       String? projectID}) async {
-    final docSnap = await _buyerCollection
+    final docSnap = await _itemCollection
         .where('studentID', isEqualTo: studentID)
         .limit(1)
         .get();
@@ -130,7 +125,7 @@ class BuyersFirestore extends ChangeNotifier {
   }
 
   Future<BuyerModel> getStudentByID({required studentID}) async {
-    final querySnapshot = await _buyerCollection
+    final querySnapshot = await _itemCollection
         .where('studentID', isEqualTo: studentID)
         .limit(1)
         .get();

@@ -1,12 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
+import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
+import 'package:graduation_project/views/splash/body_splash.dart';
 import 'package:provider/provider.dart';
 
 import 'services/themes/custom_theme.dart';
-import 'views/splash/body_splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,12 +32,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SellerFirestore(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ItemFirestore(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: CustomTheme.lightTheme(context),
         darkTheme: CustomTheme.darkTheme(context),
+        // home: const PageSplachScreen(),
         home: const PageSplachScreen(),
       ),
     );
