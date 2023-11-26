@@ -1,5 +1,5 @@
-class ItemModel {
-  ItemModel(
+class SellerModel {
+  SellerModel(
       {this.email,
       this.username,
       this.phoneNumber,
@@ -16,7 +16,7 @@ class ItemModel {
   String? category;
   String? projectName;
 
-  ItemModel.fromMap(Map<String, dynamic> data)
+  SellerModel.fromMap(Map<String, dynamic> data)
       : assert(data.isNotEmpty),
         email = data['email'],
         username = data['username'],

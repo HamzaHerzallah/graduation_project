@@ -100,6 +100,7 @@ class _RegisterBuyerState extends State<RegisterBuyer> {
                                     emailController.text,
                                     passwordController.text);
                                 if (user != null) {
+                                  // ignore: avoid_print
                                   print(
                                       'Buyer signed up successfully: ${user.uid}');
                                   await buyer.addBuyer(
@@ -122,6 +123,7 @@ class _RegisterBuyerState extends State<RegisterBuyer> {
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
                                       fontSize: 16.0);
+                                  // ignore: avoid_print
                                   print('Buyer sign up failed');
                                 }
                               },

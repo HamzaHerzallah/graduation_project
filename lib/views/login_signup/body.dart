@@ -1,8 +1,14 @@
-import 'component/button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
+import 'package:graduation_project/services/Firebase/seller_firestore.dart';
+import 'package:graduation_project/services/Firebase/user_auth.dart';
+import 'package:graduation_project/views/home/buyerHome/home_page.dart';
+import 'package:graduation_project/views/home/sellerHome/pagehome.dart';
+import 'package:provider/provider.dart';
+
 import 'login/login.dart';
 import 'signup/body.dart';
 import '../../services/constant/path_images.dart';
-import '../../services/language/generated/key_lang.dart';
 import 'package:flutter/material.dart';
 
 class PageEnter extends StatefulWidget {
@@ -15,106 +21,156 @@ class PageEnter extends StatefulWidget {
 class _PageEnterState extends State<PageEnter> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            const Expanded(
-              flex: 2,
-              child: Image(
-                image: AssetImage(PathImage.splashPhoto),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 100),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // const Image(
-                  //     image: AssetImage(PathImage.splashPhoto),
-                  //     width: 100,
-                  //     height: 100),
-                  // //******************************************************* */ name app
+    final UserAuth auth = Provider.of<UserAuth>(context);
+    final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
+    final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
-                  // const Text(
-                  //   KeyLang.appName,
-                  //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  // ).animate().fadeIn().rotate(delay: const Duration(seconds: 2)),
-                  //************************************************************ */ weclome
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.black,
-                    margin: const EdgeInsets.only(bottom: 20),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.topLeft,
-                    child: const Text(
-                      'Welcome to our community! We\'re here to support and engage with you.',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+    Future<void> checkUserAndNavigate() async {
+      bool isBuyer = await buyer.isBuyer(auth.currentUser.email ?? '');
+      if (isBuyer) {
+        buyer.loadBuyerData();
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PageHomeBuyer(),
+          ),
+        );
+      } else {
+        seller.loadSellerData();
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PageHomeSeller(),
+          ),
+        );
+      }
+    }
+
+    return StreamBuilder<User?>(
+      stream: UserAuth().userStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasData) {
+          checkUserAndNavigate();
+          return const SizedBox.shrink();
+        } else {
+          return SafeArea(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(PathImage.splashPhoto),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                  // .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                  // .fadeOut(curve: Curves.easeInBack),
-
-                  //********************************button login and push to another page
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          const SizedBox(
-                            child: Text(
-                              'Already have an\n account ?',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  wordSpacing: 2),
-                            ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 100),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Welcome to Our Community!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
+                            color: Colors.blue,
                           ),
-                          InkWell(
-                            onTap: () {
-                              var route = MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              );
-                              Navigator.push(context, route);
-                            },
-                            child: const Text(
-                              KeyLang.login,
-                              style: TextStyle(
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'We\'re here to support and engage with you on your journey.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                var route = MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SelectBuyerOrSeller(),
+                                );
+                                Navigator.push(context, route);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 30,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Get Started',
+                                style: TextStyle(
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  letterSpacing: 1,
-                                  color: Colors.red),
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      /////***********************************************signUP  and push to another page*/
-
-                      InkWell(
-                        onTap: () {
-                          var route = MaterialPageRoute(
-                            builder: (context) => const SelecltBuyerORSeller(),
-                          );
-                          Navigator.push(context, route);
-                        },
-                        child: const Button(textButton: 'Get Started'),
-                      ),
-                    ],
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Already have an account?',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    var route = MaterialPageRoute(
+                                      builder: (context) => const LoginPage(),
+                                    );
+                                    Navigator.push(context, route);
+                                  },
+                                  child: const Text(
+                                    ' Log in',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
-            const SizedBox(height: 20)
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

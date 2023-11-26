@@ -12,7 +12,7 @@ class SellerFirestore extends ChangeNotifier {
       FirebaseFirestore.instance.collection('Sellers');
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  ItemModel? seller;
+  SellerModel? seller;
   bool isLoading = false;
   String errorMessage = '';
 
@@ -54,6 +54,7 @@ class SellerFirestore extends ChangeNotifier {
           .get();
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
+      // ignore: avoid_print
       print('Error checking user existence: $e');
       return false;
     }
@@ -65,7 +66,7 @@ class SellerFirestore extends ChangeNotifier {
         .where('email', isEqualTo: user.email)
         .limit(1)
         .get();
-    seller = ItemModel.fromMap(
+    seller = SellerModel.fromMap(
         querySnapshot.docs.first.data() as Map<String, dynamic>);
     notifyListeners();
   }

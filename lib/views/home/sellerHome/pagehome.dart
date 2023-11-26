@@ -1,7 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/services/constant/path_images.dart';
-import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_addproject.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_chat.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_home.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_notification.dart';
@@ -16,12 +15,11 @@ class PageHomeSeller extends StatefulWidget {
 
 class _PageHomeSellerState extends State<PageHomeSeller> {
   int indexPage = 0;
-  static List<Widget> pageSelect = const [
-    HomePageSeller(),
-    NotificationPageSeller(),
-    AddProductSeller(),
-    ChatSeller(),
-    ProfilePageSeller()
+  static List<Widget> pageSelect = [
+    const HomePageSeller(),
+    const NotificationPageSeller(),
+    const ChatSeller(),
+    const ProfilePageSeller()
   ];
 
   @override
@@ -49,14 +47,15 @@ class _PageHomeSellerState extends State<PageHomeSeller> {
       items: const [
         TabItem(icon: Icons.home, title: 'Home'),
         TabItem(icon: Icons.notifications, title: 'Notification'),
-        TabItem(icon: Icons.add, title: 'Add Product'),
         TabItem(icon: Icons.message, title: 'chat'),
         TabItem(icon: Icons.people, title: 'Profile')
       ],
       onTap: (int value) {
-        setState(() {
-          indexPage = value;
-        });
+        if (value != 2) {
+          setState(() {
+            indexPage = value;
+          });
+        }
       },
     );
   }

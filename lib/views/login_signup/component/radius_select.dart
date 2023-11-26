@@ -7,8 +7,8 @@ class RadiusSelectSellerOrBuyer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 3,
-      height: MediaQuery.of(context).size.height / 6,
+      // width: MediaQuery.of(context).size.width / 2,
+      // height: MediaQuery.of(context).size.height / 6,
       decoration: BoxDecoration(
           gradient: const LinearGradient(
               colors: [Colors.white, Colors.blue],

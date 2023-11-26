@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/services/Firebase/seller_firestore.dart';
+import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/services/constant/path_images.dart';
 import 'package:graduation_project/views/login_signup/component/button.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class ProfilePageSeller extends StatelessWidget {
   const ProfilePageSeller({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SellerFirestore seller = Provider.of<SellerFirestore>(context);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -23,29 +29,20 @@ class ProfilePageSeller extends StatelessWidget {
                 fit: BoxFit.fill,
                 image: AssetImage(PathImage.userImage),
               ),
-            )
-            //* user name
-            ,
+            ),
             const SizedBox(
               height: 15,
             ),
-            const Text(
-              'user name',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            )
-            //* email user
-            ,
-            const Text(
-              'Email address@.com ',
-              style: TextStyle(fontSize: 20, color: Colors.grey),
-            )
-            //*button edit Profile
-            ,
+            Text(
+              seller.seller?.username ?? '',
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              seller.seller?.email ?? '',
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
+            ),
             const SizedBox(height: 15),
-            const Button(textButton: 'Edit Profile')
-
-            //*setting
-            ,
+            const Button(textButton: 'Edit Profile'),
             const ProfileMenuWidget(
                 title: 'Setting', icon: Icons.settings_outlined),
             const ProfileMenuWidget(title: 'dark', icon: Icons.dark_mode),
@@ -73,7 +70,17 @@ class ProfileMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserAuth auth = Provider.of<UserAuth>(context);
+
     return ListTile(
+        onTap: () async {
+          if (title == 'Log out') {
+            await auth.signOut();
+            if (context.mounted) {
+              Phoenix.rebirth(context);
+            }
+          }
+        },
         leading: Container(
             width: 40,
             height: 40,

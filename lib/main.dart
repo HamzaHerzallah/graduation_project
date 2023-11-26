@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
@@ -21,28 +22,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => UserAuth(),
+    return Phoenix(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => UserAuth(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => BuyersFirestore(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => SellerFirestore(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ItemFirestore(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Shop App',
+          debugShowCheckedModeBanner: false,
+          theme: CustomTheme.lightTheme(context),
+          darkTheme: CustomTheme.darkTheme(context),
+          // home: const PageSplachScreen(),
+          home: const PageSplachScreen(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => BuyersFirestore(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => SellerFirestore(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ItemFirestore(),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: CustomTheme.lightTheme(context),
-        darkTheme: CustomTheme.darkTheme(context),
-        // home: const PageSplachScreen(),
-        home: const PageSplachScreen(),
       ),
     );
   }

@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
-import 'package:graduation_project/Models/seller_model.dart';
+import 'package:graduation_project/Models/item_model.dart';
 
 import '../../models/buyer_model.dart';
-import 'user_auth.dart';
 
 class ItemFirestore extends ChangeNotifier {
   final CollectionReference _itemCollection =
@@ -45,61 +43,35 @@ class ItemFirestore extends ChangeNotifier {
     await _itemCollection.doc(itemId).update({'itemId': itemId});
   }
 
-  Future<void> loadSellerData() async {
-    final User user = UserAuth().currentUser;
-    QuerySnapshot querySnapshot = await _itemCollection
-        .where('email', isEqualTo: user.email)
-        .limit(1)
-        .get();
-    item = ItemModel.fromMap(
-        querySnapshot.docs.first.data() as Map<String, dynamic>);
-    notifyListeners();
+  Stream<List<ItemModel>> getItemsForSellerStream(String sellerId) {
+    return _itemCollection
+        .where('sellerId', isEqualTo: sellerId)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return ItemModel.fromMap(data);
+      }).toList();
+    });
   }
 
-  Future<void> updateSellerData(
-      {bool? registered,
-      String? path,
-      bool? hasTeam,
-      String? projectID,
-      String? token,
-      List<dynamic>? alerts,
-      String? bio,
-      List<dynamic>? canDo,
-      List<dynamic>? chats}) async {
-    final User user = UserAuth().currentUser;
-    final docSnap = await _itemCollection
-        .where('studentUID', isEqualTo: user.uid)
-        .limit(1)
-        .get();
-    final doc = docSnap.docs.first;
-    if (registered != null) {
-      doc.reference.update({'registered': true});
+  Stream<int> getItemCountForSellerStream(String sellerId) {
+    return _itemCollection
+        .where('sellerId', isEqualTo: sellerId)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.size);
+  }
+
+  Future<void> deleteItem(String itemId) async {
+    try {
+      await _itemCollection.doc(itemId).delete();
+      // ignore: avoid_print
+      print('Item deleted successfully.');
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error deleting item: $e');
+      // Handle the error as needed
     }
-    if (path != null) {
-      doc.reference.update({'profilePicture': path});
-    }
-    if (hasTeam != null) {
-      doc.reference.update({'hasTeam': hasTeam});
-    }
-    if (projectID != null) {
-      doc.reference.update({'projectID': projectID});
-    }
-    if (token != null) {
-      doc.reference.update({'token': token});
-    }
-    if (alerts != null) {
-      doc.reference.update({'alerts': alerts});
-    }
-    if (bio != null) {
-      doc.reference.update({'bio': bio});
-    }
-    if (canDo != null) {
-      doc.reference.update({'canDo': canDo});
-    }
-    if (chats != null) {
-      doc.reference.update({'chats': chats});
-    }
-    loadSellerData();
   }
 
   Future<void> updateStudentByID(

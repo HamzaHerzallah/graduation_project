@@ -45,6 +45,7 @@ class BuyersFirestore extends ChangeNotifier {
           .get();
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
+      // ignore: avoid_print
       print('Error checking user existence: $e');
       return false;
     }

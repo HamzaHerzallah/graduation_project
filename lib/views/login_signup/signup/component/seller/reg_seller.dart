@@ -13,14 +13,14 @@ import '../../../component/text_pass.dart';
 import '../../../component/text_username.dart';
 import '../../../login/login.dart';
 
-class RigesterSeller extends StatefulWidget {
-  const RigesterSeller({super.key});
+class RegisterSeller extends StatefulWidget {
+  const RegisterSeller({super.key});
 
   @override
-  State<RigesterSeller> createState() => _RigesterSellerState();
+  State<RegisterSeller> createState() => _RegisterSellerState();
 }
 
-class _RigesterSellerState extends State<RigesterSeller> {
+class _RegisterSellerState extends State<RegisterSeller> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -131,6 +131,7 @@ class _RigesterSellerState extends State<RigesterSeller> {
                                   emailController.text,
                                   passwordController.text);
                               if (user != null) {
+                                // ignore: avoid_print
                                 print(
                                     'Buyer signed up successfully: ${user.uid}');
                                 await seller.addSeller(
@@ -156,6 +157,7 @@ class _RigesterSellerState extends State<RigesterSeller> {
                                     backgroundColor: Colors.red,
                                     textColor: Colors.white,
                                     fontSize: 16.0);
+                                // ignore: avoid_print
                                 print('Seller sign up failed');
                               }
                             },
