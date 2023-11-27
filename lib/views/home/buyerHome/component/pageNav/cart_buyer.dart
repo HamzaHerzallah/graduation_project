@@ -7,15 +7,12 @@ class CartPageBuyer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int price = 10; //*Change price from Fire base
-    //* to Do :The total costs of the products must change in total
-    //*to Do:create variable total cost take price all product counter Item
+    int price = 10;
     String nameSeller = 'nameSeller';
     String nameProdcut = 'nameProduct';
-    int numItem = 25; //number of  all item Chosen by the buyer
+    int numItem = 25;
 
-    int numOfOneProduct = _CounterItemState
-        .counter; //this variable counter number of one  prodect
+    int numOfOneProduct = _CounterItemState.counter;
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -54,7 +51,6 @@ class CartPageBuyer extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(nameSeller),
-                                //*to do :must value counter change after click add or remove , do not be late(WithOut refresh)
                                 Text('Price  \$ $price')
                               ],
                             ),
@@ -62,8 +58,6 @@ class CartPageBuyer extends StatelessWidget {
                                 height: 50, width: 80, child: CounterItem()),
                           ),
                         ),
-
-                        //*to do :after click on the (x) must remove item selected
                         Positioned(
                           right: 5,
                           child: Container(
@@ -91,7 +85,7 @@ class CartPageBuyer extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
-                    '\$$price', //*to do: all prodect choosen from buyer must calculate an show price
+                    '\$$price',
                     style: const TextStyle(fontSize: 25, color: Colors.red),
                   )
                 ],
@@ -134,7 +128,6 @@ class _CounterItemState extends State<CounterItem> {
             child: const Icon(Icons.remove),
           ),
         ),
-
         Container(
           color: Colors.black.withOpacity(0.2),
           width: 30,
@@ -145,8 +138,6 @@ class _CounterItemState extends State<CounterItem> {
             style: const TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
-        //*do add counter
-
         InkWell(
           onTap: () {
             setState(() {
