@@ -43,7 +43,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: CustomTheme.lightTheme(context),
           darkTheme: CustomTheme.darkTheme(context),
-          // home: const PageSplachScreen(),
           home: const PageSplachScreen(),
         ),
       ),

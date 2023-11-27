@@ -18,10 +18,11 @@ class TextFieldUseAll extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(12)),
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: TextField(
@@ -30,8 +31,15 @@ class TextFieldUseAll extends StatelessWidget {
             style: const TextStyle(color: Colors.black),
             obscureText: false,
             decoration: InputDecoration(
-              icon: Icon(iconuse),
+              border: InputBorder.none,
+              icon: Icon(
+                iconuse,
+                color: Colors.deepPurple,
+              ),
               hintText: hint,
+              hintStyle: const TextStyle(
+                color: Colors.deepPurple,
+              ),
             ),
           ),
         ),

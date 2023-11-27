@@ -71,6 +71,21 @@ class SellerFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<SellerModel>> getAllSellers() async {
+    try {
+      QuerySnapshot querySnapshot = await _sellerCollection.get();
+      List<SellerModel> sellers = [];
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        sellers.add(SellerModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return sellers;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error getting sellers: $e');
+      return [];
+    }
+  }
+
   Future<void> updateSellerData(
       {bool? registered,
       String? path,

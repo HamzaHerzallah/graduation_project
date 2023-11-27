@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple[400],
         body: SingleChildScrollView(
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 80),
                         child: const Text(
                           'Welcome Back!',
                           style: TextStyle(
@@ -148,9 +148,10 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Colors.deepPurple,
                               padding: const EdgeInsets.symmetric(
                                 vertical: 15,
+                                horizontal: 30,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -170,9 +171,10 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () {
                               // Your existing onTap logic here
                             },
-                            child: const Text(
+                            child: Text(
                               'Forgot Your Password? Reset',
-                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.deepPurple[400], fontSize: 15),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -186,9 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               "Don't Have an Account? Sign Up",
-                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.deepPurple[400], fontSize: 15),
                             ),
                           ),
                         ],

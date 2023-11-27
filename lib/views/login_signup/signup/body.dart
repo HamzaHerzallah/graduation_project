@@ -10,7 +10,7 @@ class SelectBuyerOrSeller extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepPurple[400],
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -49,7 +49,7 @@ class SelectBuyerOrSeller extends StatelessWidget {
                         navigateToRegistration(context, const RegisterBuyer());
                       },
                       text: KeyLang.buyer,
-                      color: Colors.blue,
+                      color: Colors.deepPurple[400] ?? Colors.black,
                       textColor: Colors.white,
                       icon: Icons.shopping_cart,
                     ),
@@ -59,7 +59,7 @@ class SelectBuyerOrSeller extends StatelessWidget {
                         navigateToRegistration(context, const RegisterSeller());
                       },
                       text: KeyLang.seller,
-                      color: Colors.blue,
+                      color: Colors.deepPurple[400] ?? Colors.black,
                       textColor: Colors.white,
                       icon: Icons.store,
                     ),

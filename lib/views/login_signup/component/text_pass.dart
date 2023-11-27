@@ -26,9 +26,15 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
             style: const TextStyle(color: Colors.black),
             obscureText: !_passwordVisiable,
             decoration: InputDecoration(
-              icon: const Icon(Icons.lock_open),
+              icon: const Icon(
+                Icons.lock_open,
+                color: Colors.deepPurple,
+              ),
               border: InputBorder.none,
               hintText: KeyLang.password,
+              hintStyle: const TextStyle(
+                color: Colors.deepPurple,
+              ),
               suffixIcon: IconButton(
                 icon: Icon(_passwordVisiable
                     ? Icons.visibility

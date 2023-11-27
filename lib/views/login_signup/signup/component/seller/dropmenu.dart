@@ -31,7 +31,7 @@ class _DropDownMenuDepartState extends State<DropDownMenuDepart> {
       child: GestureDetector(
         onTap: () => widget.dismissKeyboard,
         child: DropdownMenu<String>(
-          textStyle: const TextStyle(color: Colors.black),
+          textStyle: const TextStyle(color: Colors.deepPurple),
           initialSelection: listDepartment.first,
           leadingIcon: const Icon(Icons.add_business),
           onSelected: (String? value) {

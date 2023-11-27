@@ -4,10 +4,10 @@ import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/home/buyerHome/home_page.dart';
 import 'package:graduation_project/views/home/sellerHome/pagehome.dart';
+import 'package:graduation_project/views/login_signup/signup/component/verifiication/verify.dart';
 import 'package:provider/provider.dart';
 
 import 'login/login.dart';
-import 'signup/body.dart';
 import '../../services/constant/path_images.dart';
 import 'package:flutter/material.dart';
 
@@ -26,23 +26,33 @@ class _PageEnterState extends State<PageEnter> {
     final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
     Future<void> checkUserAndNavigate() async {
-      bool isBuyer = await buyer.isBuyer(auth.currentUser.email ?? '');
-      if (isBuyer) {
-        buyer.loadBuyerData();
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const PageHomeBuyer(),
-          ),
-        );
+      if (auth.currentUser.emailVerified == true) {
+        bool isBuyer = await buyer.isBuyer(auth.currentUser.email ?? '');
+        if (isBuyer) {
+          buyer.loadBuyerData();
+          // ignore: use_build_context_synchronously
+          await Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PageHomeBuyer(),
+            ),
+          );
+        } else {
+          seller.loadSellerData();
+          // ignore: use_build_context_synchronously
+          await Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PageHomeSeller(),
+            ),
+          );
+        }
       } else {
-        seller.loadSellerData();
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
+        await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const PageHomeSeller(),
+            builder: (context) =>
+                Pageverified(email: auth.currentUser.email ?? ''),
           ),
         );
       }
@@ -57,8 +67,12 @@ class _PageEnterState extends State<PageEnter> {
           );
         }
         if (snapshot.hasData) {
-          checkUserAndNavigate();
-          return const SizedBox.shrink();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            checkUserAndNavigate();
+          });
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         } else {
           return SafeArea(
             child: Scaffold(
@@ -70,7 +84,7 @@ class _PageEnterState extends State<PageEnter> {
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(PathImage.splashPhoto),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
                     ),
@@ -81,18 +95,18 @@ class _PageEnterState extends State<PageEnter> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Welcome to Our Community!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 32,
-                            color: Colors.blue,
+                            fontSize: 28,
+                            color: Colors.deepPurple[400],
                           ),
                         ),
                         const SizedBox(height: 20),
                         const Text(
-                          'We\'re here to support and engage with you on your journey.',
+                          'We\'re here to support and engage with you on your journey',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -106,13 +120,12 @@ class _PageEnterState extends State<PageEnter> {
                             ElevatedButton(
                               onPressed: () {
                                 var route = MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SelectBuyerOrSeller(),
+                                  builder: (context) => const LoginPage(),
                                 );
                                 Navigator.push(context, route);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Colors.deepPurple,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 15,
                                   horizontal: 30,
@@ -129,35 +142,6 @@ class _PageEnterState extends State<PageEnter> {
                                   color: Colors.white,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'Already have an account?',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    var route = MaterialPageRoute(
-                                      builder: (context) => const LoginPage(),
-                                    );
-                                    Navigator.push(context, route);
-                                  },
-                                  child: const Text(
-                                    ' Log in',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),

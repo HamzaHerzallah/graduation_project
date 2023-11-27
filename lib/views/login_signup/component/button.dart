@@ -12,14 +12,13 @@ class Button extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-        boxShadow: [BoxShadow(offset: Offset(0.0, 0.0), blurRadius: 25)],
+        borderRadius: BorderRadius.all(Radius.circular(8)),
         // gradient: LinearGradient(
         //   begin: Alignment.centerLeft,
         //   end: Alignment.centerRight,
         //   colors: [Colors.blue, Colors.purple],
         // ),
-        color: Color.fromARGB(255, 4, 67, 117),
+        color: Colors.deepPurple,
       ),
       child: Center(
         child: Text(
