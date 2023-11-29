@@ -37,7 +37,7 @@ class PageAfterCreatePost extends StatelessWidget {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(
             isScrollControlled: true,
@@ -47,15 +47,16 @@ class PageAfterCreatePost extends StatelessWidget {
             },
           );
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.post_add, color: Colors.white, size: 30),
+        backgroundColor: Colors.deepPurple,
+        icon:
+            const Icon(Icons.add_circle_outline, color: Colors.white, size: 30),
+        label: const Text('Add Product'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
 
-//***********************************3.Structure post **********************************
 Card cardPost(
     {required String? image,
     required String? title,
@@ -69,19 +70,28 @@ Card cardPost(
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          InkWell(
-              onTap: () async {
-                await items.deleteItem(itemId ?? '');
-              },
-              child:
-                  const Text('delete', style: TextStyle(color: Colors.blue))),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[400],
+            ),
+            onPressed: () async {
+              await items.deleteItem(itemId ?? '');
+            },
+            child: const Text(
+              'delete',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
         ],
       ),
       leading: Image(
         image: NetworkImage(image ?? ''),
         width: 100,
       ),
-      title: Text('$title \n \t\$ $price'),
+      title: Text(
+        '$title\n$price',
+        style: const TextStyle(color: Colors.black),
+      ),
       subtitle: Text(description ?? ''),
     ),
   );

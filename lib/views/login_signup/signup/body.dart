@@ -18,7 +18,7 @@ class SelectBuyerOrSeller extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Sign Up as a?',
+                'Let start',
                 style: TextStyle(
                   letterSpacing: 3,
                   fontWeight: FontWeight.bold,

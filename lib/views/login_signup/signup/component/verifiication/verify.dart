@@ -49,6 +49,7 @@ class _PageverifiedState extends State<Pageverified> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Email Verification'),
+        backgroundColor: Colors.deepPurple[400],
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
@@ -58,7 +59,7 @@ class _PageverifiedState extends State<Pageverified> {
             const SizedBox(height: 50),
             Text(
               '\t\tEmail verification has been sent to ',
-              style: TextStyle(color: Colors.grey[350]),
+              style: TextStyle(color: Colors.deepPurple[400]),
             ),
             Row(
               children: [
@@ -76,12 +77,14 @@ class _PageverifiedState extends State<Pageverified> {
               children: [
                 const Text(
                   'Resend code after ',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                  ),
                 ),
                 const SizedBox(width: 5),
                 Text(
                   '$remainingSeconds seconds',
-                  style: const TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.deepPurple),
                 ),
               ],
             ),
@@ -92,6 +95,9 @@ class _PageverifiedState extends State<Pageverified> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
                   onPressed: remainingSeconds <= 0
                       ? () {
                           auth.sendVerificationEmail();
@@ -105,6 +111,9 @@ class _PageverifiedState extends State<Pageverified> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
                   onPressed: () async {
                     await auth.currentUser.reload();
                     if (auth.currentUser.emailVerified) {

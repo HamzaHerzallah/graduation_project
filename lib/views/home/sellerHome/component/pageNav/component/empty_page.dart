@@ -15,8 +15,18 @@ class EmptyPagePost extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Image(image: AssetImage(PathImage.postEmpty)),
-            const Text('You don\'t have any post'),
-            const Text('create post by tapping the button below.'),
+            Text(
+              'You don\'t have any post',
+              style: TextStyle(
+                color: Colors.deepPurple[400],
+              ),
+            ),
+            Text(
+              'create post by tapping the button below.',
+              style: TextStyle(
+                color: Colors.deepPurple[400],
+              ),
+            ),
             const SizedBox(height: 25),
             InkWell(
               onTap: () {

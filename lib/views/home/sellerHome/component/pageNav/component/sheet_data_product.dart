@@ -30,8 +30,10 @@ class _BottomSheetAddState extends State<BottomSheetAdd> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Add New Product'),
-            const Text('Fill out the details below to add a new post'),
+            const Text(
+              'Add New Product',
+              style: TextStyle(color: Colors.black),
+            ),
             const SizedBox(height: 15),
             TextFieldUseAll(
               hint: 'Title',

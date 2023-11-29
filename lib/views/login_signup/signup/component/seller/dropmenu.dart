@@ -18,7 +18,7 @@ class _DropDownMenuDepartState extends State<DropDownMenuDepart> {
     'Food',
     'Sweets',
     'Clothes',
-    'Perfums',
+    'Perfumes',
     'Hand-made'
   ];
   String dropDownValue = listDepartment.first;

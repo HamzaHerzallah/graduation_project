@@ -20,13 +20,19 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
     Container(),
     const ProfilePageBuyer()
   ];
+  static List<String> pageTitle = [
+    'Home',
+    'Orders',
+    'Chat',
+    'Profile',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[350],
         appBar: bulidAppBar(context),
-        // body: const Body(),
         body: pageNav[indexPage],
         floatingActionButton: indexPage == 0
             ? FloatingActionButton.extended(

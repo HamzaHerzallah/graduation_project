@@ -110,7 +110,7 @@ class _PageEnterState extends State<PageEnter> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.grey,
+                            color: Colors.deepPurple,
                           ),
                         ),
                         const SizedBox(height: 40),

@@ -71,7 +71,7 @@ class _RegisterSellerState extends State<RegisterSeller> {
                       children: [
                         //*textFiald : fill the name user
                         TextFieldUseAll(
-                          hint: KeyLang.nameUser,
+                          hint: KeyLang.userName,
                           iconuse: Icons.person,
                           type: TextInputType.name,
                           controller: nameController,

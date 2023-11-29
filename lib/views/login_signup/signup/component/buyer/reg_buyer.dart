@@ -33,7 +33,8 @@ class _RegisterBuyerState extends State<RegisterBuyer> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.deepPurple[400],
-          title: Text('Buyer', style: TextStyle(color: AppColors.bgwhite)),
+          title: Text('Request a service',
+              style: TextStyle(color: AppColors.bgwhite)),
         ),
         body: SingleChildScrollView(
           child: SizedBox(
@@ -60,7 +61,7 @@ class _RegisterBuyerState extends State<RegisterBuyer> {
                         //*textFiald : fill the name user
                         TextFieldUseAll(
                             controller: nameController,
-                            hint: KeyLang.nameUser,
+                            hint: KeyLang.userName,
                             iconuse: Icons.person,
                             type: TextInputType.name),
                         const SizedBox(height: 10),
