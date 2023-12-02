@@ -4,6 +4,7 @@ import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_cha
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_home.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_notification.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_profile.dart';
+import 'package:graduation_project/views/home/sellerHome/component/pageNav/seller_orders_page.dart';
 
 class PageHomeSeller extends StatefulWidget {
   const PageHomeSeller({super.key});
@@ -16,7 +17,7 @@ class _PageHomeSellerState extends State<PageHomeSeller> {
   int indexPage = 0;
   static List<Widget> pageSelect = [
     const HomePageSeller(),
-    const NotificationPageSeller(),
+    const SellerOrdersPage(),
     const ChatSeller(),
     const ProfilePageSeller()
   ];
@@ -56,19 +57,19 @@ class _PageHomeSellerState extends State<PageHomeSeller> {
       items: [
         TabItem(
             icon: Icon(Icons.home,
-                color: indexPage == 0 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 0 ? Colors.deepPurple[400] : Colors.white),
             title: 'Home'),
         TabItem(
             icon: Icon(Icons.list,
-                color: indexPage == 1 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 1 ? Colors.deepPurple[400] : Colors.white),
             title: 'Orders'),
         TabItem(
             icon: Icon(Icons.message,
-                color: indexPage == 2 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 2 ? Colors.deepPurple[400] : Colors.white),
             title: 'chat'),
         TabItem(
             icon: Icon(Icons.people,
-                color: indexPage == 3 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 3 ? Colors.deepPurple[400] : Colors.white),
             title: 'Profile')
       ],
       onTap: (int value) {

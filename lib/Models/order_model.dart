@@ -4,11 +4,15 @@ class OrderModel {
       this.sellerId,
       this.orderId,
       this.items,
-      this.orderStatus});
+      this.orderStatus,
+      this.buyerName,
+      this.projectName});
 
   String? sellerId;
   String? buyerId;
   String? orderId;
+  String? buyerName;
+  String? projectName;
   String? orderStatus;
   List<dynamic>? items;
 
@@ -18,6 +22,8 @@ class OrderModel {
         buyerId = data['buyerId'],
         orderId = data['orderId'],
         orderStatus = data['orderStatus'],
+        buyerName = data['buyerName'],
+        projectName = data['projectName'],
         items = data['items'];
 
   Map<String, dynamic> toMap() {
@@ -26,6 +32,8 @@ class OrderModel {
     data['buyerId'] = buyerId;
     data['orderId'] = orderId;
     data['orderStatus'] = orderStatus;
+    data['buyerName'] = buyerName;
+    data['projectName'] = projectName;
     data['items'] = items;
     return data;
   }

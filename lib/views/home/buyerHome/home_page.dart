@@ -1,7 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/cart_buyer.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/home_buyer.dart';
-import 'package:graduation_project/views/home/buyerHome/component/pageNav/item_select.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_orders_page.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/profile_buyer.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
   int indexPage = 0;
   List<Widget> pageNav = [
     const HomePageBuyer(),
-    const ItemSelectBuyer(),
+    const BuyerOrdersPage(),
     Container(),
     const ProfilePageBuyer()
   ];
@@ -97,22 +97,22 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
         TabItem(
             icon: Icon(Icons.home,
                 size: 25,
-                color: indexPage == 0 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 0 ? Colors.deepPurple[400] : Colors.white),
             title: 'Home'),
         TabItem(
             icon: Icon(Icons.list,
                 size: 25,
-                color: indexPage == 1 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 1 ? Colors.deepPurple[400] : Colors.white),
             title: 'Orders'),
         TabItem(
             icon: Icon(Icons.message,
                 size: 25,
-                color: indexPage == 2 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 2 ? Colors.deepPurple[400] : Colors.white),
             title: 'Chat'),
         TabItem(
             icon: Icon(Icons.person,
                 size: 25,
-                color: indexPage == 3 ? Colors.deepPurple[400] : Colors.black),
+                color: indexPage == 3 ? Colors.deepPurple[400] : Colors.white),
             title: 'Profile')
       ],
       onTap: (int value) {

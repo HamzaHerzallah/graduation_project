@@ -1,24 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/services/constant/path_images.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
+import 'package:graduation_project/services/Firebase/item_firestore.dart';
+import 'package:graduation_project/services/Firebase/order_firestore.dart';
+import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/views/login_signup/component/button.dart';
+import 'package:provider/provider.dart';
 
 class CartPageBuyer extends StatelessWidget {
   const CartPageBuyer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int price = 10;
-    String nameSeller = 'nameSeller';
-    String nameProdcut = 'nameProduct';
-    int numItem = 25;
+    final ItemFirestore items = Provider.of<ItemFirestore>(context);
+    final OrderFirestore orders = Provider.of<OrderFirestore>(context);
+    final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
+    final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
-    int numOfOneProduct = _CounterItemState.counter;
+    double totalPrice = 0;
+    for (var item in items.items) {
+      double itemPrice = item['price'] is int
+          ? (item['price'] as int).toDouble()
+          : double.parse(item['price'].toString());
+
+      double itemCount = item['count'] is int
+          ? (item['count'] as int).toDouble()
+          : double.parse(item['count'].toString());
+
+      totalPrice += itemPrice * itemCount;
+    }
+
     return SafeArea(
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const Text(
                 'Shopping Cart',
@@ -26,7 +43,7 @@ class CartPageBuyer extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                'Total($numItem) Item',
+                'Total(${items.items.length}) Items',
                 style: const TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 15),
@@ -34,41 +51,51 @@ class CartPageBuyer extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: 500,
                 child: ListView.builder(
-                  itemCount: numItem,
+                  itemCount: items.items.length,
                   itemBuilder: (context, index) {
                     return Stack(
                       children: [
                         Card(
                           elevation: 10,
                           child: ListTile(
-                            leading: const Image(
-                                image: AssetImage(PathImage.clothes1)),
+                            leading: Image(
+                              image: NetworkImage(
+                                  items.items[index]['image'] ?? ''),
+                            ),
                             title: Text(
-                              nameProdcut,
+                              items.items[index]['title'] ?? '',
                               style: const TextStyle(color: Colors.black),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(nameSeller),
-                                Text('Price  \$ $price')
-                              ],
+                            subtitle: Text(
+                                'Price (${items.items[index]['price']}) JD'),
+                            trailing: SizedBox(
+                              height: 50,
+                              width: 80,
+                              child: CounterItem(
+                                index: index,
+                                items: items,
+                              ),
                             ),
-                            trailing: const SizedBox(
-                                height: 50, width: 80, child: CounterItem()),
                           ),
                         ),
                         Positioned(
                           right: 5,
-                          child: Container(
-                            width: 25,
-                            height: 25,
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                              color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              final temp = items.items;
+                              temp.removeAt(index);
+                              items.updateItems(temp);
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                color: Colors.white,
+                              ),
+                              child: const Icon(Icons.close),
                             ),
-                            child: const Icon(Icons.close),
                           ),
                         ),
                       ],
@@ -78,22 +105,42 @@ class CartPageBuyer extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Total',
-                    style: TextStyle(fontSize: 20),
+                    'Total price',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
                   Text(
-                    '\$$price',
-                    style: const TextStyle(fontSize: 25, color: Colors.red),
-                  )
+                    '($totalPrice) JD',
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
               Container(
                 alignment: Alignment.center,
-                child: const Button(textButton: 'Make order'),
+                child: InkWell(
+                  onTap: () async {
+                    final projectName = await seller.getProjectNameBySellerId(
+                        items.items[0]['sellerId'] ?? '');
+                    await orders.addOrder(
+                      buyerId: buyer.buyer?.buyerId,
+                      sellerId: items.items[0]['sellerId'],
+                      items: items.items,
+                      orderstatus: 'Pending',
+                      buyerName: buyer.buyer?.username,
+                      projectName: projectName,
+                    );
+                    items.items.removeWhere((element) => true);
+                    items.updateItems(items.items);
+                    Fluttertoast.showToast(
+                      msg: 'Your order has been sent',
+                      toastLength: Toast.LENGTH_LONG,
+                    );
+                  },
+                  child: const Button(textButton: 'Make order'),
+                ),
               ),
             ],
           ),
@@ -104,23 +151,29 @@ class CartPageBuyer extends StatelessWidget {
 }
 
 class CounterItem extends StatefulWidget {
-  const CounterItem({super.key});
+  const CounterItem({super.key, required this.index, required this.items});
+  final int index;
+  final ItemFirestore items;
 
   @override
   State<CounterItem> createState() => _CounterItemState();
 }
 
 class _CounterItemState extends State<CounterItem> {
-  static int counter = 1;
   @override
   Widget build(BuildContext context) {
+    int counter = widget.items.items[widget.index]['count'];
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         InkWell(
           onTap: () {
             setState(() {
-              if (counter > 1) counter--;
+              if (counter > 1) {
+                final temp = widget.items.items;
+                temp[widget.index]['count']--;
+                widget.items.updateItems(temp);
+              }
             });
           },
           child: Container(
@@ -140,9 +193,9 @@ class _CounterItemState extends State<CounterItem> {
         ),
         InkWell(
           onTap: () {
-            setState(() {
-              counter++;
-            });
+            final temp = widget.items.items;
+            temp[widget.index]['count']++;
+            widget.items.updateItems(temp);
           },
           child: Container(
             alignment: Alignment.center,

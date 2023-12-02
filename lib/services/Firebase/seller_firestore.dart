@@ -71,6 +71,26 @@ class SellerFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<String?> getProjectNameBySellerId(String sellerId) async {
+    try {
+      QuerySnapshot querySnapshot = await _sellerCollection
+          .where('sellerId', isEqualTo: sellerId)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> sellerData =
+            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        return sellerData['projectName'] as String?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting projectName: $e');
+      return null;
+    }
+  }
+
   Future<List<SellerModel>> getAllSellers() async {
     try {
       QuerySnapshot querySnapshot = await _sellerCollection.get();
@@ -82,6 +102,22 @@ class SellerFirestore extends ChangeNotifier {
     } catch (e) {
       // ignore: avoid_print
       print('Error getting sellers: $e');
+      return [];
+    }
+  }
+
+  Future<List<SellerModel>> getSellersByCategory(String category) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _sellerCollection.where('category', isEqualTo: category).get();
+      List<SellerModel> sellers = [];
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        sellers.add(SellerModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return sellers;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error getting sellers by category: $e');
       return [];
     }
   }

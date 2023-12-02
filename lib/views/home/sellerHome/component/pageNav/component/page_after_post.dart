@@ -89,7 +89,7 @@ Card cardPost(
         width: 100,
       ),
       title: Text(
-        '$title\n$price',
+        '$title\n$price JD',
         style: const TextStyle(color: Colors.black),
       ),
       subtitle: Text(description ?? ''),

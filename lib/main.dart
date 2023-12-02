@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
+import 'package:graduation_project/services/Firebase/order_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/splash/body_splash.dart';
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (context) => ItemFirestore(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => OrderFirestore(),
           ),
         ],
         child: MaterialApp(

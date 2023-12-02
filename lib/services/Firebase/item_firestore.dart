@@ -3,14 +3,13 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/item_model.dart';
 
-import '../../models/buyer_model.dart';
-
 class ItemFirestore extends ChangeNotifier {
   final CollectionReference _itemCollection =
       FirebaseFirestore.instance.collection('Items');
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   ItemModel? item;
+  List<dynamic> items = [];
   bool isLoading = false;
   String errorMessage = '';
 
@@ -74,35 +73,9 @@ class ItemFirestore extends ChangeNotifier {
     }
   }
 
-  Future<void> updateStudentByID(
-      {required String? studentID,
-      Map<dynamic, dynamic>? alert,
-      List<dynamic>? chats,
-      bool? hasTeam,
-      String? projectID}) async {
-    final docSnap = await _itemCollection
-        .where('studentID', isEqualTo: studentID)
-        .limit(1)
-        .get();
-    final doc = docSnap.docs.first;
-    if (hasTeam != null) {
-      doc.reference.update({'hasTeam': hasTeam});
-    }
-    if (projectID != null) {
-      doc.reference.update({'projectID': projectID});
-    }
-    if (chats != null) {
-      doc.reference.update({'chats': chats});
-    }
-  }
-
-  Future<BuyerModel> getStudentByID({required studentID}) async {
-    final querySnapshot = await _itemCollection
-        .where('studentID', isEqualTo: studentID)
-        .limit(1)
-        .get();
-    return BuyerModel.fromMap(
-        querySnapshot.docs.first.data() as Map<String, dynamic>);
+  void updateItems(List<dynamic> updatedItems) {
+    items = updatedItems;
+    notifyListeners();
   }
 
 //   // * Profile Image
