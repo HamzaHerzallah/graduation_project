@@ -6,8 +6,26 @@ import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/Models/item_model.dart';
 import 'package:provider/provider.dart';
 
-class HomePageBuyer extends StatelessWidget {
+class HomePageBuyer extends StatefulWidget {
   const HomePageBuyer({super.key});
+
+  @override
+  State<HomePageBuyer> createState() => _HomePageBuyerState();
+}
+
+class _HomePageBuyerState extends State<HomePageBuyer> {
+  final TextEditingController searchController = TextEditingController();
+  String selectedCategory = 'All';
+  List<SellerModel> sellers = [];
+
+  List<SellerModel> filterSellers(
+      String searchText, List<SellerModel> sellers) {
+    return sellers
+        .where((seller) => seller.projectName!
+            .toLowerCase()
+            .contains(searchText.toLowerCase()))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +34,13 @@ class HomePageBuyer extends StatelessWidget {
       'All',
       'Food',
       'Sweets',
+      'Clothes',
       'Perfumes',
       'Hand Made',
     ];
 
     return Scaffold(
+      appBar: bulidAppBar(context),
       body: Column(
         children: [
           SizedBox(
@@ -29,21 +49,29 @@ class HomePageBuyer extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      String selectedCategory = categories[index];
-                    },
-                    child: Text(categories[index]),
+                return ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.deepPurple,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
                   ),
+                  onPressed: () {
+                    setState(() {
+                      selectedCategory = categories[index];
+                    });
+                  },
+                  child: Text(categories[index]),
                 );
               },
             ),
           ),
           Expanded(
             child: FutureBuilder<List<SellerModel>>(
-              future: seller.getAllSellers(),
+              future: selectedCategory == 'All'
+                  ? seller.getAllSellers()
+                  : seller.getSellersByCategory(selectedCategory),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -58,71 +86,124 @@ class HomePageBuyer extends StatelessWidget {
                     child: Text('No sellers available.'),
                   );
                 } else {
-                  List<SellerModel> sellers = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: sellers.length,
-                    itemBuilder: (context, index) {
-                      SellerModel sellerModel = sellers[index];
-                      return Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    SellerItemsPage(seller: sellerModel),
+                  sellers = snapshot.data!;
+                  sellers = filterSellers(searchController.text, sellers);
+                  return sellers.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'There is no sellers',
+                            style: TextStyle(color: Colors.deepPurple),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: sellers.length,
+                          itemBuilder: (context, index) {
+                            SellerModel sellerModel = sellers[index];
+                            return Card(
+                              elevation: 3,
+                              margin: const EdgeInsets.all(10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          SellerItemsPage(seller: sellerModel),
+                                    ),
+                                  );
+                                },
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16),
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: sellerModel
+                                                .profilePicture !=
+                                            ''
+                                        ? NetworkImage(
+                                            sellerModel.profilePicture ?? '')
+                                        : const AssetImage(
+                                                'assets/images/defaultAvatar.png')
+                                            as ImageProvider,
+                                  ),
+                                  title: Text(
+                                    sellerModel.projectName ?? '',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Username: ${sellerModel.username}',
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Category: ${sellerModel.category}',
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             );
                           },
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(16),
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: sellerModel.profilePicture != ''
-                                  ? NetworkImage(
-                                      sellerModel.profilePicture ?? '')
-                                  : const AssetImage(
-                                          'assets/images/defaultAvatar.png')
-                                      as ImageProvider,
-                            ),
-                            title: Text(
-                              sellerModel.projectName ?? '',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Username: ${sellerModel.username}',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Category: ${sellerModel.category}',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                        );
                 }
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  AppBar bulidAppBar(context) {
+    return AppBar(
+      title: searchText(context),
+      centerTitle: true,
+      backgroundColor: Colors.deepPurple[400],
+    );
+  }
+
+  Container searchText(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.grey[350],
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      width: MediaQuery.of(context).size.width / 2,
+      child: TextField(
+        controller: searchController,
+        onChanged: (value) {
+          setState(() {
+            sellers = [];
+          });
+        },
+        decoration: InputDecoration(
+          hintText: 'Search',
+          hintStyle: TextStyle(
+            color: Colors.deepPurple[400],
+          ),
+          icon: Icon(
+            Icons.search,
+            color: Colors.deepPurple[400],
+          ),
+          border: InputBorder.none,
+        ),
+        style: const TextStyle(color: Colors.black),
+        clipBehavior: Clip.antiAlias,
       ),
     );
   }

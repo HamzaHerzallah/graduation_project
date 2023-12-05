@@ -29,18 +29,20 @@ class _PageEnterState extends State<PageEnter> {
       if (auth.currentUser.emailVerified == true) {
         bool isBuyer = await buyer.isBuyer(auth.currentUser.email ?? '');
         if (isBuyer) {
-          buyer.loadBuyerData();
+          await buyer.loadBuyerData();
           // ignore: use_build_context_synchronously
-          await Navigator.pushReplacement(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const PageHomeBuyer(),
             ),
           );
-        } else {
-          seller.loadSellerData();
+        }
+        bool isSeller = await seller.isSeller(auth.currentUser.email ?? '');
+        if (isSeller) {
+          await seller.loadSellerData();
           // ignore: use_build_context_synchronously
-          await Navigator.pushReplacement(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const PageHomeSeller(),
@@ -48,7 +50,7 @@ class _PageEnterState extends State<PageEnter> {
           );
         }
       } else {
-        await Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>

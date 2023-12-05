@@ -22,7 +22,12 @@ class BuyerOrdersPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No orders found.'));
+            return const Center(
+              child: Text(
+                'No orders found.',
+                style: TextStyle(color: Colors.deepPurple),
+              ),
+            );
           } else {
             List<OrderModel> orders = snapshot.data!;
             return ListView.builder(

@@ -14,14 +14,9 @@ class PageHomeBuyer extends StatefulWidget {
 
 class _PageHomeBuyerState extends State<PageHomeBuyer> {
   int indexPage = 0;
-  List<Widget> pageNav = [
-    const HomePageBuyer(),
-    const BuyerOrdersPage(),
-    Container(),
-    const ProfilePageBuyer()
-  ];
+  late List<Widget> pageNav;
   static List<String> pageTitle = [
-    'Home',
+    '',
     'Orders',
     'Chat',
     'Profile',
@@ -29,10 +24,17 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
 
   @override
   Widget build(BuildContext context) {
+    pageNav = [
+      const HomePageBuyer(),
+      const BuyerOrdersPage(),
+      Container(),
+      const ProfilePageBuyer(),
+    ];
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[350],
-        appBar: bulidAppBar(context),
+        appBar: indexPage != 0 ? bulidAppBar(context) : null,
         body: pageNav[indexPage],
         floatingActionButton: indexPage == 0
             ? FloatingActionButton.extended(
@@ -59,32 +61,9 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
 
   AppBar bulidAppBar(context) {
     return AppBar(
-      title: searchText(context),
+      title: Text(pageTitle[indexPage]),
       centerTitle: true,
       backgroundColor: Colors.deepPurple[400],
-    );
-  }
-
-  Container searchText(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-          color: Colors.grey[350],
-          borderRadius: const BorderRadius.all(Radius.circular(15))),
-      width: MediaQuery.of(context).size.width / 2,
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search',
-          hintStyle: TextStyle(color: Colors.deepPurple[400]),
-          icon: Icon(
-            Icons.search,
-            color: Colors.deepPurple[400],
-          ),
-          border: InputBorder.none,
-        ),
-        style: const TextStyle(color: Colors.black),
-        clipBehavior: Clip.antiAlias,
-      ),
     );
   }
 

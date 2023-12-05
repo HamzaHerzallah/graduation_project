@@ -1,32 +1,119 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/services/constant/path_images.dart';
 import 'package:graduation_project/views/login_signup/component/button.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-///*********************************************this code  from  page Profile Seller just change from seller to buyer********** */
 class ProfilePageBuyer extends StatelessWidget {
   const ProfilePageBuyer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //image user
-            Container(
-              width: 200,
-              height: 200,
-              clipBehavior: Clip.antiAlias,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(100)),
-              child: const Image(
-                fit: BoxFit.fill,
-                image: AssetImage(PathImage.userImage),
-              ),
+            Stack(
+              children: [
+                Container(
+                  width: 200,
+                  height: 200,
+                  clipBehavior: Clip.antiAlias,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                  child: Image(
+                    fit: BoxFit.fill,
+                    image: buyer.buyer?.profilePicture != ''
+                        ? NetworkImage(buyer.buyer?.profilePicture ?? '')
+                            as ImageProvider
+                        : const AssetImage(PathImage.userImage),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 46,
+                    width: 46,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text(
+                                'Change Profile Picture',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 4),
+                              content: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        buyer.pickGalleryImage();
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.image),
+                                      label: const Text('Sellect From Gallery'),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        buyer.pickCameraImage();
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.photo_camera),
+                                      label: const Text('Take a Picture'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: const CircleBorder(),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: const Icon(
+                        Icons.photo_camera_rounded,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 15,
