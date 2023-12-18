@@ -6,6 +6,7 @@ import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/home/sellerHome/pagehome.dart';
 import 'package:graduation_project/views/login_signup/component/text_pass.dart';
 import 'package:graduation_project/views/login_signup/component/text_username.dart';
+import 'package:graduation_project/views/login_signup/login/forgot_password.dart';
 import 'package:graduation_project/views/login_signup/signup/body.dart';
 import 'package:graduation_project/views/login_signup/signup/component/verifiication/verify.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 20),
                           TextFieldPassword(
-                              KeyLang.password, passwordController),
+                            KeyLang.password,
+                            passwordController,
+                          ),
                           const SizedBox(height: 30),
                           ElevatedButton(
                             onPressed: () async {
@@ -99,40 +102,43 @@ class _LoginPageState extends State<LoginPage> {
                                       await buyer.isBuyer(user.email ?? '');
                                   if (isBuyer) {
                                     buyer.loadBuyerData();
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PageHomeBuyer(),
-                                      ),
-                                      (Route<dynamic> route) => false,
-                                    );
+                                    if (mounted) {
+                                      await Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PageHomeBuyer(),
+                                        ),
+                                        (Route<dynamic> route) => false,
+                                      );
+                                    }
                                   }
                                   final isSeller =
                                       await seller.isSeller(user.email ?? '');
                                   if (isSeller) {
                                     seller.loadSellerData();
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PageHomeSeller(),
-                                      ),
-                                      (Route<dynamic> route) => false,
-                                    );
+                                    if (mounted) {
+                                      await Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PageHomeSeller(),
+                                        ),
+                                        (Route<dynamic> route) => false,
+                                      );
+                                    }
                                   }
                                 } else {
                                   auth.sendVerificationEmail();
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          Pageverified(email: user.email ?? ''),
-                                    ),
-                                  );
+                                  if (mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Pageverified(
+                                            email: user.email ?? ''),
+                                      ),
+                                    );
+                                  }
                                 }
                               } else {
                                 Fluttertoast.showToast(
@@ -169,12 +175,21 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 20),
                           InkWell(
                             onTap: () {
-                              // Your existing onTap logic here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPassword(
+                                    email: emailController.text,
+                                  ),
+                                ),
+                              );
                             },
                             child: Text(
                               'Forgot Your Password? Reset',
                               style: TextStyle(
-                                  color: Colors.deepPurple[400], fontSize: 15),
+                                color: Colors.deepPurple[400],
+                                fontSize: 15,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),

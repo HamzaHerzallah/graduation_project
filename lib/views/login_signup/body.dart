@@ -7,7 +7,6 @@ import 'package:graduation_project/views/home/sellerHome/pagehome.dart';
 import 'package:graduation_project/views/login_signup/signup/component/verifiication/verify.dart';
 import 'package:provider/provider.dart';
 
-import 'login/login.dart';
 import '../../services/constant/path_images.dart';
 import 'package:flutter/material.dart';
 
@@ -30,33 +29,44 @@ class _PageEnterState extends State<PageEnter> {
         bool isBuyer = await buyer.isBuyer(auth.currentUser.email ?? '');
         if (isBuyer) {
           await buyer.loadBuyerData();
-          // ignore: use_build_context_synchronously
-          Navigator.pushReplacement(
+          if (mounted) {
+            await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PageHomeBuyer(),
+              ),
+            );
+          }
+        }
+        bool isSeller = await seller.isSeller(auth.currentUser.email ?? '');
+        if (isSeller) {
+          await seller.loadSellerData();
+          if (mounted) {
+            await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PageHomeSeller(),
+              ),
+            );
+          }
+        }
+      } else {
+        if (auth.currentUser.email != null && auth.currentUser.email != '') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  Pageverified(email: auth.currentUser.email ?? ''),
+            ),
+          );
+        } else {
+          await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const PageHomeBuyer(),
             ),
           );
         }
-        bool isSeller = await seller.isSeller(auth.currentUser.email ?? '');
-        if (isSeller) {
-          await seller.loadSellerData();
-          // ignore: use_build_context_synchronously
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const PageHomeSeller(),
-            ),
-          );
-        }
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                Pageverified(email: auth.currentUser.email ?? ''),
-          ),
-        );
       }
     }
 
@@ -120,11 +130,8 @@ class _PageEnterState extends State<PageEnter> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             ElevatedButton(
-                              onPressed: () {
-                                var route = MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                );
-                                Navigator.push(context, route);
+                              onPressed: () async {
+                                await auth.loginAnonymously();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,

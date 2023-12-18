@@ -24,7 +24,10 @@ class Button extends StatelessWidget {
         child: Text(
           textButton,
           style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ).animate(target: 1).fade(end: 0.8).scaleXY(end: 1.1),
       ),
     );

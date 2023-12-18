@@ -21,7 +21,13 @@ class OrderFirestore extends ChangeNotifier {
   }
 
   Future<void> addOrder(
-      {sellerId, buyerId, orderstatus, items, projectName, buyerName}) async {
+      {sellerId,
+      buyerId,
+      orderstatus,
+      items,
+      projectName,
+      buyerName,
+      notes}) async {
     Map<String, dynamic> orderData = {
       'sellerId': sellerId,
       'buyerId': buyerId,
@@ -29,6 +35,7 @@ class OrderFirestore extends ChangeNotifier {
       'orderStatus': orderstatus,
       'buyerName': buyerName,
       'projectName': projectName,
+      'notes': notes,
     };
     DocumentReference docRef = await _orderCollection.add(orderData);
     String orderId = docRef.id;

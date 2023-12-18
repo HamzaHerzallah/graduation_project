@@ -14,6 +14,20 @@ class ItemCard extends StatefulWidget {
 class _ItemCardState extends State<ItemCard> {
   int count = 1;
 
+  void _openImageDialog(String image) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
@@ -27,16 +41,40 @@ class _ItemCardState extends State<ItemCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(10)),
-              image: DecorationImage(
-                image: NetworkImage(widget.item.image ?? ''),
-                fit: BoxFit.cover,
+          Stack(
+            alignment: AlignmentDirectional.topEnd,
+            children: [
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10)),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.item.image ?? ''),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              InkWell(
+                onTap: () {
+                  _openImageDialog(widget.item.image ?? '');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[500]!.withOpacity(0.6),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(
+                      Icons.open_in_full_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -53,7 +91,7 @@ class _ItemCardState extends State<ItemCard> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${widget.item.price}',
+                  '${widget.item.price} JD',
                   style: const TextStyle(
                     color: Colors.green,
                     fontSize: 14,

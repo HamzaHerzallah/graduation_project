@@ -125,7 +125,11 @@ class SellerFirestore extends ChangeNotifier {
     }
   }
 
-  Future<void> updateSellerData({String? path, List<dynamic>? chats}) async {
+  Future<void> updateSellerData(
+      {String? path,
+      String? username,
+      String? phoneNumber,
+      List<dynamic>? chats}) async {
     final User user = UserAuth().currentUser;
     final docSnap = await _sellerCollection
         .where('email', isEqualTo: user.email)
@@ -134,6 +138,12 @@ class SellerFirestore extends ChangeNotifier {
     final doc = docSnap.docs.first;
     if (path != null) {
       doc.reference.update({'profilePicture': path});
+    }
+    if (username != null) {
+      doc.reference.update({'username': username});
+    }
+    if (phoneNumber != null) {
+      doc.reference.update({'phoneNumber': phoneNumber});
     }
     if (chats != null) {
       doc.reference.update({'chats': chats});

@@ -4,16 +4,26 @@ import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/order_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
+import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/login_signup/component/button.dart';
+import 'package:graduation_project/views/login_signup/login/login.dart';
 import 'package:provider/provider.dart';
 
-class CartPageBuyer extends StatelessWidget {
+class CartPageBuyer extends StatefulWidget {
   const CartPageBuyer({super.key});
+
+  @override
+  State<CartPageBuyer> createState() => _CartPageBuyerState();
+}
+
+class _CartPageBuyerState extends State<CartPageBuyer> {
+  final TextEditingController notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
     final OrderFirestore orders = Provider.of<OrderFirestore>(context);
+    final UserAuth user = Provider.of<UserAuth>(context);
     final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
     final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
@@ -32,117 +42,174 @@ class CartPageBuyer extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Shopping Cart',
-                style: TextStyle(fontSize: 25, color: Colors.black),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                'Total(${items.items.length}) Items',
-                style: const TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 500,
-                child: ListView.builder(
-                  itemCount: items.items.length,
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      children: [
-                        Card(
-                          elevation: 10,
-                          child: ListTile(
-                            leading: Image(
-                              image: NetworkImage(
-                                  items.items[index]['image'] ?? ''),
-                            ),
-                            title: Text(
-                              items.items[index]['title'] ?? '',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                                'Price (${items.items[index]['price']}) JD'),
-                            trailing: SizedBox(
-                              height: 50,
-                              width: 80,
-                              child: CounterItem(
-                                index: index,
-                                items: items,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Shopping Cart',
+                  style: TextStyle(fontSize: 25, color: Colors.black),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  'Total(${items.items.length}) Items',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 450,
+                  child: ListView.builder(
+                    itemCount: items.items.length,
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: [
+                          Card(
+                            elevation: 10,
+                            child: ListTile(
+                              leading: Image(
+                                image: NetworkImage(
+                                    items.items[index]['image'] ?? ''),
+                              ),
+                              title: Text(
+                                items.items[index]['title'] ?? '',
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              subtitle: Text(
+                                  'Price (${items.items[index]['price']}) JD'),
+                              trailing: SizedBox(
+                                height: 50,
+                                width: 80,
+                                child: CounterItem(
+                                  index: index,
+                                  items: items,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          right: 5,
-                          child: InkWell(
-                            onTap: () {
-                              final temp = items.items;
-                              temp.removeAt(index);
-                              items.updateItems(temp);
-                            },
-                            child: Container(
-                              width: 25,
-                              height: 25,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                                color: Colors.white,
+                          Positioned(
+                            right: 5,
+                            child: InkWell(
+                              onTap: () {
+                                final temp = items.items;
+                                temp.removeAt(index);
+                                items.updateItems(temp);
+                              },
+                              child: Container(
+                                width: 25,
+                                height: 25,
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12)),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(Icons.close),
                               ),
-                              child: const Icon(Icons.close),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Total price',
-                    style: TextStyle(fontSize: 20, color: Colors.black),
+                        ],
+                      );
+                    },
                   ),
-                  Text(
-                    '($totalPrice) JD',
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Container(
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () async {
-                    final projectName = await seller.getProjectNameBySellerId(
-                        items.items[0]['sellerId'] ?? '');
-                    await orders.addOrder(
-                      buyerId: buyer.buyer?.buyerId,
-                      sellerId: items.items[0]['sellerId'],
-                      items: items.items,
-                      orderstatus: 'Pending',
-                      buyerName: buyer.buyer?.username,
-                      projectName: projectName,
-                    );
-                    items.items.removeWhere((element) => true);
-                    items.updateItems(items.items);
-                    Fluttertoast.showToast(
-                      msg: 'Your order has been sent',
-                      toastLength: Toast.LENGTH_LONG,
-                    );
-                  },
-                  child: const Button(textButton: 'Make order'),
                 ),
-              ),
-            ],
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Total price',
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    Text(
+                      '($totalPrice) JD',
+                      style: const TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                TextField(
+                  style: const TextStyle(color: Colors.black),
+                  controller: notesController,
+                  decoration: InputDecoration(
+                    labelText: 'Any Notes ?',
+                    labelStyle: const TextStyle(color: Colors.black),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () async {
+                      if (user.currentUser.email != null &&
+                          user.currentUser.email != '') {
+                        final projectName =
+                            await seller.getProjectNameBySellerId(
+                                items.items[0]['sellerId'] ?? '');
+                        await orders.addOrder(
+                          buyerId: buyer.buyer?.buyerId,
+                          sellerId: items.items[0]['sellerId'],
+                          items: items.items,
+                          orderstatus: 'Pending',
+                          buyerName: buyer.buyer?.username,
+                          projectName: projectName,
+                          notes: notesController.text,
+                        );
+                        items.items.removeWhere((element) => true);
+                        items.updateItems(items.items);
+                        Fluttertoast.showToast(
+                          msg: 'Your order has been sent',
+                          toastLength: Toast.LENGTH_LONG,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'You should be logged in to make orders',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.deepPurple[400],
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LoginPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text("Login"),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Button(textButton: 'Make order'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

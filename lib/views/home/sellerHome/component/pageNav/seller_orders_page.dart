@@ -48,7 +48,29 @@ class SellerOrdersPage extends StatelessWidget {
                       builder: (context) => AlertDialog(
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 0),
-                        title: const Text('Items'),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Items',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            const Text(
+                              'notes:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.red,
+                              ),
+                            ),
+                            Text(
+                              '${order.notes}',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
                         content: ListView.builder(
                           itemCount: order.items?.length,
                           itemBuilder: (context, index) {
@@ -70,9 +92,12 @@ class SellerOrdersPage extends StatelessWidget {
                                 ),
                                 subtitle: Text(
                                   'Price (${order.items?[index]['price']}) JD',
+                                  style: TextStyle(color: Colors.grey[800]),
                                 ),
-                                trailing:
-                                    Text('${order.items?[index]['count']}'),
+                                trailing: Text(
+                                  '${order.items?[index]['count']}',
+                                  style: const TextStyle(color: Colors.black),
+                                ),
                               ),
                             );
                           },

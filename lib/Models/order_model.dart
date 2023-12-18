@@ -6,7 +6,8 @@ class OrderModel {
       this.items,
       this.orderStatus,
       this.buyerName,
-      this.projectName});
+      this.projectName,
+      this.notes});
 
   String? sellerId;
   String? buyerId;
@@ -14,6 +15,7 @@ class OrderModel {
   String? buyerName;
   String? projectName;
   String? orderStatus;
+  String? notes;
   List<dynamic>? items;
 
   OrderModel.fromMap(Map<String, dynamic> data)
@@ -24,6 +26,7 @@ class OrderModel {
         orderStatus = data['orderStatus'],
         buyerName = data['buyerName'],
         projectName = data['projectName'],
+        notes = data['notes'],
         items = data['items'];
 
   Map<String, dynamic> toMap() {
@@ -34,6 +37,7 @@ class OrderModel {
     data['orderStatus'] = orderStatus;
     data['buyerName'] = buyerName;
     data['projectName'] = projectName;
+    data['notes'] = notes;
     data['items'] = items;
     return data;
   }

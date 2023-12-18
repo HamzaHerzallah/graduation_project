@@ -64,6 +64,16 @@ class UserAuth extends ChangeNotifier {
     }
   }
 
+  Future<User?> loginAnonymously() async {
+    try {
+      UserCredential userCredential = await _auth.signInAnonymously();
+      return userCredential.user;
+    } catch (e) {
+      setMessage = '$e';
+      return null;
+    }
+  }
+
   Future<void> resetPassword(String? email) async {
     try {
       await _auth.sendPasswordResetEmail(email: '$email');

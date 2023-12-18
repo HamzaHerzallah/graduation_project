@@ -2,7 +2,6 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_chat.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_home.dart';
-import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_notification.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/s_profile.dart';
 import 'package:graduation_project/views/home/sellerHome/component/pageNav/seller_orders_page.dart';
 
