@@ -5,6 +5,7 @@ import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/home/buyerHome/home_page.dart';
 import 'package:graduation_project/views/home/sellerHome/pagehome.dart';
+import 'package:graduation_project/views/login_signup/body.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -54,22 +55,17 @@ class _PageverifiedState extends State<Pageverified> {
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 50),
             Text(
-              '\t\tEmail verification has been sent to ',
+              'Email verification has been sent to',
               style: TextStyle(color: Colors.deepPurple[400]),
             ),
-            Row(
-              children: [
-                //*email address dynamic
-                Text(
-                  '\t\t\t\t ${widget.email}',
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Text(
+              widget.email,
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 40),
             Row(
@@ -146,7 +142,23 @@ class _PageverifiedState extends State<Pageverified> {
                   child: const Text('Confirm'),
                 ),
               ],
-            )
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+              ),
+              onPressed: () async {
+                await auth.loginAnonymously();
+                if (mounted) {
+                  await Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PageEnter()),
+                      (route) => false);
+                }
+              },
+              child: const Text('Continue as guest'),
+            ),
           ],
         ),
       ),

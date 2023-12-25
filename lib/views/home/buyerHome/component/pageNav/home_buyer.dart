@@ -212,7 +212,7 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
 class SellerItemsPage extends StatefulWidget {
   final SellerModel seller;
 
-  const SellerItemsPage({required this.seller, Key? key}) : super(key: key);
+  const SellerItemsPage({required this.seller, super.key});
 
   @override
   State<SellerItemsPage> createState() => _SellerItemsPageState();

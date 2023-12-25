@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/item_model.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
+import 'package:graduation_project/services/Firebase/user_auth.dart';
+import 'package:graduation_project/views/login_signup/login/login.dart';
 import 'package:provider/provider.dart';
 
 class ItemCard extends StatefulWidget {
-  const ItemCard({Key? key, required this.item}) : super(key: key);
+  const ItemCard({super.key, required this.item});
   final ItemModel item;
 
   @override
@@ -31,6 +33,7 @@ class _ItemCardState extends State<ItemCard> {
   @override
   Widget build(BuildContext context) {
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
+    final UserAuth user = Provider.of<UserAuth>(context);
 
     return Card(
       elevation: 3,
@@ -140,9 +143,54 @@ class _ItemCardState extends State<ItemCard> {
                         backgroundColor: Colors.deepPurple,
                       ),
                       onPressed: () {
-                        if (items.items.isNotEmpty) {
-                          if (items.items[0]['sellerId'] ==
-                              widget.item.sellerId) {
+                        if (user.currentUser.email != null &&
+                            user.currentUser.email != '') {
+                          if (items.items.isNotEmpty) {
+                            if (items.items[0]['sellerId'] ==
+                                widget.item.sellerId) {
+                              final temp = items.items;
+                              bool found = false;
+                              for (int i = 0; i < temp.length; i++) {
+                                if (temp[i]['itemId'] == widget.item.itemId) {
+                                  temp[i]['count'] += count;
+                                  found = true;
+                                  break;
+                                }
+                              }
+                              if (!found) {
+                                temp.add(
+                                    {...widget.item.toMap(), 'count': count});
+                              }
+                              items.updateItems(temp);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'You can\'t add product to cart from two sellers in same time\nClear the cart first',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.deepPurple[400],
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.deepPurple,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Ok"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          } else {
                             final temp = items.items;
                             bool found = false;
                             for (int i = 0; i < temp.length; i++) {
@@ -157,48 +205,40 @@ class _ItemCardState extends State<ItemCard> {
                                   {...widget.item.toMap(), 'count': count});
                             }
                             items.updateItems(temp);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'You can\'t add product to cart from two sellers in same time\nClear the cart first',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.deepPurple[400],
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.deepPurple,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Ok"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
                           }
                         } else {
-                          final temp = items.items;
-                          bool found = false;
-                          for (int i = 0; i < temp.length; i++) {
-                            if (temp[i]['itemId'] == widget.item.itemId) {
-                              temp[i]['count'] += count;
-                              found = true;
-                              break;
-                            }
-                          }
-                          if (!found) {
-                            temp.add({...widget.item.toMap(), 'count': count});
-                          }
-                          items.updateItems(temp);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'You should be logged in to add item to cart',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.deepPurple[400],
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.deepPurple,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("Login"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         }
                       },
                       child: const Text(

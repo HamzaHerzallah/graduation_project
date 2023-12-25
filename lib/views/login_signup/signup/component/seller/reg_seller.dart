@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
+import 'package:graduation_project/views/login_signup/signup/component/verifiication/verify.dart';
 import 'package:provider/provider.dart';
 
 import 'dropmenu.dart';
@@ -24,7 +25,7 @@ class _RegisterSellerState extends State<RegisterSeller> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController projectNameController = TextEditingController();
-  String selectedCategory = '';
+  String selectedCategory = 'Food';
   final TextEditingController phoneController = TextEditingController();
 
   void handleCategorySelection(String category) {
@@ -125,6 +126,15 @@ class _RegisterSellerState extends State<RegisterSeller> {
                                   category: selectedCategory,
                                   phoneNumber: phoneController.text,
                                   email: emailController.text);
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Pageverified(
+                                        email: auth.currentUser.email ?? ''),
+                                  ),
+                                );
+                              }
                             } else {
                               Fluttertoast.showToast(
                                   msg: auth.errorMessage.split(']')[1],

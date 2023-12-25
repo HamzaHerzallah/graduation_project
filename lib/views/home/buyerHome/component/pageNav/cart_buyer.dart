@@ -4,9 +4,6 @@ import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/order_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
-import 'package:graduation_project/services/Firebase/user_auth.dart';
-import 'package:graduation_project/views/login_signup/component/button.dart';
-import 'package:graduation_project/views/login_signup/login/login.dart';
 import 'package:provider/provider.dart';
 
 class CartPageBuyer extends StatefulWidget {
@@ -23,7 +20,6 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
   Widget build(BuildContext context) {
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
     final OrderFirestore orders = Provider.of<OrderFirestore>(context);
-    final UserAuth user = Provider.of<UserAuth>(context);
     final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
     final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
@@ -147,65 +143,37 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: () async {
-                      if (user.currentUser.email != null &&
-                          user.currentUser.email != '') {
-                        final projectName =
-                            await seller.getProjectNameBySellerId(
-                                items.items[0]['sellerId'] ?? '');
-                        await orders.addOrder(
-                          buyerId: buyer.buyer?.buyerId,
-                          sellerId: items.items[0]['sellerId'],
-                          items: items.items,
-                          orderstatus: 'Pending',
-                          buyerName: buyer.buyer?.username,
-                          projectName: projectName,
-                          notes: notesController.text,
-                        );
-                        items.items.removeWhere((element) => true);
-                        items.updateItems(items.items);
-                        Fluttertoast.showToast(
-                          msg: 'Your order has been sent',
-                          toastLength: Toast.LENGTH_LONG,
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'You should be logged in to make orders',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.deepPurple[400],
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.deepPurple,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const LoginPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text("Login"),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Button(textButton: 'Make order'),
+                ElevatedButton(
+                  onPressed: items.items.isEmpty
+                      ? null
+                      : () async {
+                          final projectName =
+                              await seller.getProjectNameBySellerId(
+                                  items.items[0]['sellerId'] ?? '');
+                          await orders.addOrder(
+                            buyerId: buyer.buyer?.buyerId,
+                            sellerId: items.items[0]['sellerId'],
+                            items: items.items,
+                            orderstatus: 'Pending',
+                            buyerName: buyer.buyer?.username,
+                            projectName: projectName,
+                            notes: notesController.text,
+                          );
+                          items.items.removeWhere((element) => true);
+                          items.updateItems(items.items);
+                          Fluttertoast.showToast(
+                            msg: 'Your order has been sent',
+                            toastLength: Toast.LENGTH_LONG,
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size.fromWidth(
+                        200), // You can adjust the width as needed
+                  ),
+                  child: const Text(
+                    'Make order',
+                    style: TextStyle(
+                        fontSize: 18), // You can adjust the font size as needed
                   ),
                 ),
               ],

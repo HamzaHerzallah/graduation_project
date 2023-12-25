@@ -30,42 +30,35 @@ class _PageEnterState extends State<PageEnter> {
         if (isBuyer) {
           await buyer.loadBuyerData();
           if (mounted) {
-            await Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PageHomeBuyer(),
-              ),
-            );
+            await Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const PageHomeBuyer()),
+                (route) => false);
           }
         }
         bool isSeller = await seller.isSeller(auth.currentUser.email ?? '');
         if (isSeller) {
           await seller.loadSellerData();
           if (mounted) {
-            await Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PageHomeSeller(),
-              ),
-            );
+            await Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const PageHomeSeller()),
+                (route) => false);
           }
         }
       } else {
         if (auth.currentUser.email != null && auth.currentUser.email != '') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  Pageverified(email: auth.currentUser.email ?? ''),
-            ),
-          );
+          await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      Pageverified(email: auth.currentUser.email ?? '')),
+              (route) => false);
         } else {
-          await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const PageHomeBuyer(),
-            ),
-          );
+          await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const PageHomeBuyer()),
+              (route) => false);
         }
       }
     }
