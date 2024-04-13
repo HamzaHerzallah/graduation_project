@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/seller_model.dart';
+import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_chat_page.dart';
 import 'item_card.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
@@ -30,6 +32,7 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
   @override
   Widget build(BuildContext context) {
     final SellerFirestore seller = Provider.of<SellerFirestore>(context);
+    final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
     final List<String> categories = [
       'All',
       'Food',
@@ -151,6 +154,29 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                     ],
+                                  ),
+                                  trailing: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(50))),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, BuyerChatPage.routeName,
+                                            arguments: {
+                                              'personUID':
+                                                  sellerModel.sellerUID,
+                                              'sellerID': sellerModel.sellerId,
+                                              'username': sellerModel.username,
+                                              'chats': sellerModel.chats,
+                                            });
+                                      },
+                                      icon: const Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

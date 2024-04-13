@@ -30,6 +30,7 @@ class SellerFirestore extends ChangeNotifier {
   }
 
   Future<void> addSeller({
+    uid,
     username,
     email,
     category,
@@ -37,12 +38,14 @@ class SellerFirestore extends ChangeNotifier {
     projectName,
   }) async {
     Map<String, dynamic> userData = {
+      'sellerUID': uid,
       'username': username,
       'email': email,
       'profilePicture': '',
       'phoneNumber': phoneNumber,
       'projectName': projectName,
       'category': category,
+      'chats': [],
     };
     DocumentReference docRef = await _sellerCollection.add(userData);
     String sellerId = docRef.id;
@@ -151,35 +154,16 @@ class SellerFirestore extends ChangeNotifier {
     loadSellerData();
   }
 
-  Future<void> updateStudentByID(
-      {required String? studentID,
-      Map<dynamic, dynamic>? alert,
-      List<dynamic>? chats,
-      bool? hasTeam,
-      String? projectID}) async {
+  Future<void> updateSellerByID(
+      {required String? sellerID, List<dynamic>? chats}) async {
     final docSnap = await _sellerCollection
-        .where('studentID', isEqualTo: studentID)
+        .where('sellerId', isEqualTo: sellerID)
         .limit(1)
         .get();
     final doc = docSnap.docs.first;
-    if (hasTeam != null) {
-      doc.reference.update({'hasTeam': hasTeam});
-    }
-    if (projectID != null) {
-      doc.reference.update({'projectID': projectID});
-    }
     if (chats != null) {
       doc.reference.update({'chats': chats});
     }
-  }
-
-  Future<BuyerModel> getStudentByID({required studentID}) async {
-    final querySnapshot = await _sellerCollection
-        .where('studentID', isEqualTo: studentID)
-        .limit(1)
-        .get();
-    return BuyerModel.fromMap(
-        querySnapshot.docs.first.data() as Map<String, dynamic>);
   }
 
   final picker = ImagePicker();

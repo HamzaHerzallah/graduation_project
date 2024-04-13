@@ -167,6 +167,7 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                           );
                         },
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
                     fixedSize: const Size.fromWidth(
                         200), // You can adjust the width as needed
                   ),

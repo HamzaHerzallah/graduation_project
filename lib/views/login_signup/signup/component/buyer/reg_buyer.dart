@@ -93,7 +93,8 @@ class _RegisterBuyerState extends State<RegisterBuyer> {
                                     'Buyer signed up successfully: ${user.uid}');
                                 await buyer.addBuyer(
                                     username: nameController.text,
-                                    email: emailController.text);
+                                    email: emailController.text,
+                                    uid: user.uid);
                                 if (mounted) {
                                   Navigator.push(
                                     context,

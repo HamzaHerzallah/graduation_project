@@ -1,5 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/cart_buyer.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_chats_page.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/home_buyer.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_orders_page.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/profile_buyer.dart';
@@ -18,7 +19,7 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
   static List<String> pageTitle = [
     '',
     'Orders',
-    'Chat',
+    'Chats',
     'Profile',
   ];
 
@@ -27,7 +28,7 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
     pageNav = [
       const HomePageBuyer(),
       const BuyerOrdersPage(),
-      Container(),
+      const BuyerChatsPage(),
       const ProfilePageBuyer(),
     ];
 
@@ -87,7 +88,7 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
             icon: Icon(Icons.message,
                 size: 25,
                 color: indexPage == 2 ? Colors.deepPurple[400] : Colors.white),
-            title: 'Chat'),
+            title: 'Chats'),
         TabItem(
             icon: Icon(Icons.person,
                 size: 25,

@@ -125,7 +125,8 @@ class _RegisterSellerState extends State<RegisterSeller> {
                                   projectName: projectNameController.text,
                                   category: selectedCategory,
                                   phoneNumber: phoneController.text,
-                                  email: emailController.text);
+                                  email: emailController.text,
+                                  uid: user.uid);
                               if (mounted) {
                                 Navigator.push(
                                   context,

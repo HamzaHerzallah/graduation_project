@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Models/seller_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../models/buyer_model.dart';
@@ -12,6 +13,8 @@ import 'user_auth.dart';
 class BuyersFirestore extends ChangeNotifier {
   final CollectionReference _buyerCollection =
       FirebaseFirestore.instance.collection('Buyers');
+  final CollectionReference _sellerCollection =
+      FirebaseFirestore.instance.collection('Sellers');
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   BuyerModel? buyer;
@@ -28,12 +31,14 @@ class BuyersFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addBuyer({username, email}) async {
+  Future<void> addBuyer({username, email, uid}) async {
     Map<String, dynamic> userData = {
+      'buyerUID': uid,
       'username': username,
       'email': email,
       'profilePicture': '',
       'cart': [],
+      'chats': [],
     };
     DocumentReference docRef = await _buyerCollection.add(userData);
     String buyerId = docRef.id;
@@ -85,26 +90,38 @@ class BuyersFirestore extends ChangeNotifier {
     loadBuyerData();
   }
 
-  Future<void> updateStudentByID(
-      {required String? studentID,
-      Map<dynamic, dynamic>? alert,
-      List<dynamic>? chats,
-      bool? hasTeam,
-      String? projectID}) async {
+  Future<void> updateBuyerByID(
+      {required String? buyerID, List<dynamic>? chats}) async {
     final docSnap = await _buyerCollection
-        .where('studentID', isEqualTo: studentID)
+        .where('buyerId', isEqualTo: buyerID)
         .limit(1)
         .get();
     final doc = docSnap.docs.first;
-    if (hasTeam != null) {
-      doc.reference.update({'hasTeam': hasTeam});
-    }
-    if (projectID != null) {
-      doc.reference.update({'projectID': projectID});
-    }
     if (chats != null) {
       doc.reference.update({'chats': chats});
     }
+  }
+
+  Future<dynamic> getPersonByID({required String id}) async {
+    final buyerSnapshot =
+        await _buyerCollection.where('buyerUID', isEqualTo: id).limit(1).get();
+
+    if (buyerSnapshot.docs.isNotEmpty) {
+      return BuyerModel.fromMap(
+          buyerSnapshot.docs.first.data() as Map<String, dynamic>);
+    }
+
+    final sellerSnapshot = await _sellerCollection
+        .where('sellerUID', isEqualTo: id)
+        .limit(1)
+        .get();
+
+    if (sellerSnapshot.docs.isNotEmpty) {
+      return SellerModel.fromMap(
+          sellerSnapshot.docs.first.data() as Map<String, dynamic>);
+    }
+
+    return null;
   }
 
   Future<BuyerModel> getStudentByID({required studentID}) async {
