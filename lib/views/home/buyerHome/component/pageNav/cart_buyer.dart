@@ -158,6 +158,9 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                             buyerName: buyer.buyer?.username,
                             projectName: projectName,
                             notes: notesController.text,
+                            timeStamp: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
                           );
                           items.items.removeWhere((element) => true);
                           items.updateItems(items.items);
@@ -168,13 +171,11 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
-                    fixedSize: const Size.fromWidth(
-                        200), // You can adjust the width as needed
+                    fixedSize: const Size.fromWidth(200),
                   ),
                   child: const Text(
                     'Make order',
-                    style: TextStyle(
-                        fontSize: 18), // You can adjust the font size as needed
+                    style: TextStyle(fontSize: 18),
                   ),
                 ),
               ],

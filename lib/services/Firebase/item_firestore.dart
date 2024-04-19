@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/item_model.dart';
+import 'package:graduation_project/services/Firebase/user_auth.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ItemFirestore extends ChangeNotifier {
   final CollectionReference _itemCollection =
@@ -12,6 +17,7 @@ class ItemFirestore extends ChangeNotifier {
   List<dynamic> items = [];
   bool isLoading = false;
   String errorMessage = '';
+  XFile? image;
 
   set setLoading(bool value) {
     isLoading = value;
@@ -23,23 +29,30 @@ class ItemFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
+  set setImage(XFile? value) {
+    image = value;
+    notifyListeners();
+  }
+
   Future<void> addItem({
     price,
     description,
     title,
-    image,
     sellerId,
   }) async {
     Map<String, dynamic> itemData = {
       'price': price,
       'description': description,
-      'image': image,
       'sellerId': sellerId,
       'title': title,
     };
+    String imageUrl = await uploadItemImage();
     DocumentReference docRef = await _itemCollection.add(itemData);
     String itemId = docRef.id;
-    await _itemCollection.doc(itemId).update({'itemId': itemId});
+    await _itemCollection
+        .doc(itemId)
+        .update({'itemId': itemId, 'image': imageUrl});
+    setLoading = false;
   }
 
   Stream<List<ItemModel>> getItemsForSellerStream(String sellerId) {
@@ -78,39 +91,13 @@ class ItemFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
-//   // * Profile Image
-//   final picker = ImagePicker();
-//   XFile? _image;
-//   XFile? get getImage => _image;
-
-//   Future pickGalleryImage() async {
-//     final pickedFile =
-//         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
-//     if (pickedFile != null) {
-//       _image = XFile(pickedFile.path);
-//       uploadImage();
-//     }
-//   }
-
-//   Future pickCameraImage() async {
-//     final pickedFile =
-//         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
-//     if (pickedFile != null) {
-//       _image = XFile(pickedFile.path);
-//       uploadImage();
-//     }
-//   }
-
-//   void uploadImage() async {
-//     final User user = UserAuth().currentUser;
-//     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-//         .ref('/profileImage${user.uid}');
-//     firebase_storage.UploadTask uploadTask =
-//         ref.putFile(File(getImage!.path).absolute);
-//     await Future.value(uploadTask);
-//     final String newURL = await ref.getDownloadURL();
-//     user.email?.contains('std') ?? false
-//         ? updateStudentData(path: newURL)
-//         : updateInstructorData(path: newURL);
-//   }
+  Future<String> uploadItemImage() async {
+    final User user = UserAuth().currentUser;
+    firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref('/itemImage/${user.uid}');
+    firebase_storage.UploadTask uploadTask =
+        ref.putFile(File(image!.path).absolute);
+    await Future.value(uploadTask);
+    return await ref.getDownloadURL();
+  }
 }

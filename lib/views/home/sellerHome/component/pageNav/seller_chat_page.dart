@@ -99,9 +99,7 @@ class _SellerChatPageState extends State<SellerChatPage> {
                       );
                     }
                   }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Text('');
                 },
               ),
             ),
@@ -131,10 +129,21 @@ class _SellerChatPageState extends State<SellerChatPage> {
         children: [
           Expanded(
             child: TextField(
+              style: const TextStyle(color: Colors.deepPurple),
               decoration: InputDecoration(
+                hintStyle: const TextStyle(color: Colors.deepPurple),
                 hintText: 'Type a message...',
                 filled: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(24),
+                ),
                 border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.deepPurple),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 contentPadding: const EdgeInsets.symmetric(

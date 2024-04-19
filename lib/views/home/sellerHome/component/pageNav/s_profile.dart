@@ -122,6 +122,7 @@ class _ProfilePageSellerState extends State<ProfilePageSeller> {
                         child: const Icon(
                           Icons.photo_camera_rounded,
                           size: 20,
+                          color: Colors.white,
                         ),
                       ),
                     ),

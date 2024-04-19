@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/seller_model.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../models/buyer_model.dart';
 import 'user_auth.dart';
 
 class SellerFirestore extends ChangeNotifier {

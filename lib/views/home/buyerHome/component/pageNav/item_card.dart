@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/Models/item_model.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
@@ -206,6 +207,10 @@ class _ItemCardState extends State<ItemCard> {
                             }
                             items.updateItems(temp);
                           }
+                          Fluttertoast.showToast(
+                            msg: 'The item has been added to cart',
+                            toastLength: Toast.LENGTH_LONG,
+                          );
                         } else {
                           showDialog(
                             context: context,

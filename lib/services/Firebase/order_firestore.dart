@@ -27,6 +27,7 @@ class OrderFirestore extends ChangeNotifier {
       items,
       projectName,
       buyerName,
+      timeStamp,
       notes}) async {
     Map<String, dynamic> orderData = {
       'sellerId': sellerId,
@@ -36,6 +37,7 @@ class OrderFirestore extends ChangeNotifier {
       'buyerName': buyerName,
       'projectName': projectName,
       'notes': notes,
+      'timeStamp': timeStamp,
     };
     DocumentReference docRef = await _orderCollection.add(orderData);
     String orderId = docRef.id;
@@ -57,6 +59,7 @@ class OrderFirestore extends ChangeNotifier {
   Stream<List<OrderModel>> getOrdersForSellerStream(String sellerId) {
     return _orderCollection
         .where('sellerId', isEqualTo: sellerId)
+        .orderBy('timeStamp', descending: true)
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs.map((doc) {

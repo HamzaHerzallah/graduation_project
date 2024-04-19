@@ -84,10 +84,14 @@ Card cardPost(
           ),
         ],
       ),
-      leading: Image(
-        image: NetworkImage(image ?? ''),
-        width: 100,
-      ),
+      leading: image != null && image != ''
+          ? Image(
+              image: image != ''
+                  ? NetworkImage(image)
+                  : const AssetImage('assetName') as ImageProvider,
+              width: 100,
+            )
+          : const Text(''),
       title: Text(
         '$title\n$price JD',
         style: const TextStyle(color: Colors.black),
