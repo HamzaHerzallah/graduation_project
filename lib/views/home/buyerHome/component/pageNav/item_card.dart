@@ -163,6 +163,10 @@ class _ItemCardState extends State<ItemCard> {
                                     {...widget.item.toMap(), 'count': count});
                               }
                               items.updateItems(temp);
+                              Fluttertoast.showToast(
+                                msg: 'The item has been added to cart',
+                                toastLength: Toast.LENGTH_LONG,
+                              );
                             } else {
                               showDialog(
                                 context: context,
@@ -206,11 +210,11 @@ class _ItemCardState extends State<ItemCard> {
                                   {...widget.item.toMap(), 'count': count});
                             }
                             items.updateItems(temp);
+                            Fluttertoast.showToast(
+                              msg: 'The item has been added to cart',
+                              toastLength: Toast.LENGTH_LONG,
+                            );
                           }
-                          Fluttertoast.showToast(
-                            msg: 'The item has been added to cart',
-                            toastLength: Toast.LENGTH_LONG,
-                          );
                         } else {
                           showDialog(
                             context: context,

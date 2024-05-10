@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
-import 'package:graduation_project/services/Firebase/order_firestore.dart';
-import 'package:graduation_project/services/Firebase/seller_firestore.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/payment.dart';
 import 'package:provider/provider.dart';
 
 class CartPageBuyer extends StatefulWidget {
@@ -19,9 +16,6 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
   @override
   Widget build(BuildContext context) {
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
-    final OrderFirestore orders = Provider.of<OrderFirestore>(context);
-    final BuyersFirestore buyer = Provider.of<BuyersFirestore>(context);
-    final SellerFirestore seller = Provider.of<SellerFirestore>(context);
 
     double totalPrice = 0;
     for (var item in items.items) {
@@ -146,27 +140,15 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                 ElevatedButton(
                   onPressed: items.items.isEmpty
                       ? null
-                      : () async {
-                          final projectName =
-                              await seller.getProjectNameBySellerId(
-                                  items.items[0]['sellerId'] ?? '');
-                          await orders.addOrder(
-                            buyerId: buyer.buyer?.buyerId,
-                            sellerId: items.items[0]['sellerId'],
-                            items: items.items,
-                            orderstatus: 'Pending',
-                            buyerName: buyer.buyer?.username,
-                            projectName: projectName,
-                            notes: notesController.text,
-                            timeStamp: DateTime.now()
-                                .millisecondsSinceEpoch
-                                .toString(),
-                          );
-                          items.items.removeWhere((element) => true);
-                          items.updateItems(items.items);
-                          Fluttertoast.showToast(
-                            msg: 'Your order has been sent',
-                            toastLength: Toast.LENGTH_LONG,
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentPage(
+                                items: items.items,
+                                notes: notesController.text,
+                              ),
+                            ),
                           );
                         },
                   style: ElevatedButton.styleFrom(

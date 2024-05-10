@@ -46,9 +46,9 @@ class ItemFirestore extends ChangeNotifier {
       'sellerId': sellerId,
       'title': title,
     };
-    String imageUrl = await uploadItemImage();
     DocumentReference docRef = await _itemCollection.add(itemData);
     String itemId = docRef.id;
+    String imageUrl = await uploadItemImage(itemId);
     await _itemCollection
         .doc(itemId)
         .update({'itemId': itemId, 'image': imageUrl});
@@ -91,10 +91,10 @@ class ItemFirestore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> uploadItemImage() async {
+  Future<String> uploadItemImage(itemId) async {
     final User user = UserAuth().currentUser;
-    firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref('/itemImage/${user.uid}');
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref('/itemImage/${user.uid}/$itemId');
     firebase_storage.UploadTask uploadTask =
         ref.putFile(File(image!.path).absolute);
     await Future.value(uploadTask);

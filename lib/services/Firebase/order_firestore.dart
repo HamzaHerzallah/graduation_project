@@ -28,6 +28,7 @@ class OrderFirestore extends ChangeNotifier {
       projectName,
       buyerName,
       timeStamp,
+      payment,
       notes}) async {
     Map<String, dynamic> orderData = {
       'sellerId': sellerId,
@@ -37,6 +38,7 @@ class OrderFirestore extends ChangeNotifier {
       'buyerName': buyerName,
       'projectName': projectName,
       'notes': notes,
+      'payment': payment,
       'timeStamp': timeStamp,
     };
     DocumentReference docRef = await _orderCollection.add(orderData);

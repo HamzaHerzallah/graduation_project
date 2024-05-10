@@ -149,13 +149,32 @@ class BuyerOrdersPage extends StatelessWidget {
                             ],
                           ),
                           order.orderStatus != 'Pending'
-                              ? Text(
-                                  '${order.orderStatus}',
-                                  style: TextStyle(
-                                    color: order.orderStatus == 'Accepted'
-                                        ? Colors.green
-                                        : Colors.red,
-                                  ),
+                              ? Column(
+                                  children: [
+                                    Text(
+                                      '${order.orderStatus}',
+                                      style: TextStyle(
+                                        color: order.orderStatus == 'Accepted'
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                    ),
+                                    order.orderStatus != 'Delivered'
+                                        ? ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.deepPurple,
+                                            ),
+                                            onPressed: () async {
+                                              await orderFirestore
+                                                  .updateOrderStatus(
+                                                      order.orderId ?? '',
+                                                      'Delivered');
+                                            },
+                                            child: const Text('Delivered'),
+                                          )
+                                        : const Text(''),
+                                  ],
                                 )
                               : Column(
                                   children: [

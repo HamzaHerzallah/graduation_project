@@ -24,6 +24,10 @@ dependencies:
   fluttertoast: ^8.2.4
   flutter_phoenix: ^1.1.1
   image_picker: ^1.0.4
+  flutter_stripe:
+  http: ^1.1.0
+  meta:
+  checkout_screen_ui: ^1.0.1
 
 dev_dependencies:
   flutter_test:

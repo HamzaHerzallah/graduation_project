@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class OrderModel {
   OrderModel(
       {this.buyerId,
@@ -10,6 +8,7 @@ class OrderModel {
       this.buyerName,
       this.projectName,
       this.timeStamp,
+      this.payment,
       this.notes});
 
   String? sellerId;
@@ -18,6 +17,7 @@ class OrderModel {
   String? buyerName;
   String? projectName;
   String? timeStamp;
+  String? payment;
   String? orderStatus;
   String? notes;
   List<dynamic>? items;
@@ -32,6 +32,7 @@ class OrderModel {
         projectName = data['projectName'],
         notes = data['notes'],
         timeStamp = data['timeStamp'],
+        payment = data['payment'],
         items = data['items'];
 
   Map<String, dynamic> toMap() {
@@ -44,6 +45,7 @@ class OrderModel {
     data['projectName'] = projectName;
     data['notes'] = notes;
     data['timeStamp'] = timeStamp;
+    data['payment'] = payment;
     data['items'] = items;
     return data;
   }

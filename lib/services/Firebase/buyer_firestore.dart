@@ -124,9 +124,9 @@ class BuyersFirestore extends ChangeNotifier {
     return null;
   }
 
-  Future<BuyerModel> getStudentByID({required studentID}) async {
+  dynamic getBuyerByID({required buyerID}) async {
     final querySnapshot = await _buyerCollection
-        .where('studentID', isEqualTo: studentID)
+        .where('buyerId', isEqualTo: buyerID)
         .limit(1)
         .get();
     return BuyerModel.fromMap(
