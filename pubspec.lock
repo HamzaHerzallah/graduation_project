@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  custom_rating_bar:
+    dependency: "direct main"
+    description:
+      name: custom_rating_bar
+      sha256: e4fd8385a09e1dfc74080e816525fa97da9208ccc47512ac0ee5c9e97a96680f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   easy_localization:
     dependency: "direct main"
     description:
@@ -331,6 +339,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_pannable_rating_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_pannable_rating_bar
+      sha256: a6ba1f474ccb23e1b0b7d0a0ec28bb31c088bad808fd207b536b3cb46cbcaf7a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.2+1"
   flutter_phoenix:
     dependency: "direct main"
     description:
@@ -347,6 +363,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
+  flutter_rating_bar:
+    dependency: transitive
+    description:
+      name: flutter_rating_bar
+      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -653,14 +677,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
-  shared_preferences:
-    dependency: transitive
+  rating_dialog:
+    dependency: "direct main"
     description:
-      name: shared_preferences
-      sha256: "81429e4481e1ccfb51ede496e916348668fd0921627779233bd24cc3ff6abd02"
+      name: rating_dialog
+      sha256: "4856ba266c255081f05c57148345ea13f0d86c4049859d66e14c47e2ab1f90d3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.2"
+    version: "2.0.4"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      sha256: d3bbe5553a986e83980916ded2f0b435ef2e1893dfaa29d5a7a790d0eca12180
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -673,10 +705,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_foundation
-      sha256: "7bf53a9f2d007329ee6f3df7268fd498f8373602f943c975598bbb34649b62a7"
+      sha256: "7708d83064f38060c7b39db12aefe449cb8cdc031d6062280087bc4cdb988f5c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.4"
+    version: "2.3.5"
   shared_preferences_linux:
     dependency: transitive
     description:

@@ -69,11 +69,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     QuerySnapshot querySnapshot = await cardCollection
                         .where('cardNumber', isEqualTo: results.cardNumber)
                         .get();
-                    final Map<String, dynamic> data =
-                        querySnapshot.docs.first.data() as Map<String, dynamic>;
-                    if (querySnapshot.docs.isEmpty ||
-                        data['mm/yy'] != results.cardExpiry ||
-                        data['CVV'] != results.cardSec) {
+                    if (querySnapshot.docs.isEmpty) {
                       setState(() {
                         loading = false;
                       });
@@ -81,49 +77,63 @@ class _PaymentPageState extends State<PaymentPage> {
                         msg: 'The entered information is not correct',
                         toastLength: Toast.LENGTH_LONG,
                       );
-                    } else if (data['balance'] <
-                        checkOutResult.totalCostCents / 100) {
-                      setState(() {
-                        loading = false;
-                      });
-                      Fluttertoast.showToast(
-                        msg: 'Something went wrong',
-                        toastLength: Toast.LENGTH_LONG,
-                      );
                     } else {
-                      setState(() {
-                        loading = false;
-                      });
-
-                      Fluttertoast.showToast(
-                        msg: 'Payment is successful',
-                        toastLength: Toast.LENGTH_LONG,
-                      );
-                      Future.delayed(const Duration(milliseconds: 1200),
-                          () async {
-                        final projectName =
-                            await seller.getProjectNameBySellerId(
-                                items.items[0]['sellerId'] ?? '');
-                        await orders.addOrder(
-                          buyerId: buyer.buyer?.buyerId,
-                          sellerId: items.items[0]['sellerId'],
-                          items: items.items,
-                          orderstatus: 'Pending',
-                          buyerName: buyer.buyer?.username,
-                          projectName: projectName,
-                          notes: widget.notes,
-                          payment: 'visa',
-                          timeStamp:
-                              DateTime.now().millisecondsSinceEpoch.toString(),
-                        );
-                        items.items.removeWhere((element) => true);
-                        items.updateItems(items.items);
+                      final Map<String, dynamic> data = querySnapshot.docs.first
+                          .data() as Map<String, dynamic>;
+                      if (data['mm/yy'] != results.cardExpiry ||
+                          data['CVV'] != results.cardSec) {
+                        setState(() {
+                          loading = false;
+                        });
                         Fluttertoast.showToast(
-                          msg: 'Your order has been sent',
+                          msg: 'The entered information is not correct',
                           toastLength: Toast.LENGTH_LONG,
                         );
-                        Navigator.pop(context);
-                      });
+                      } else if (data['balance'] <
+                          checkOutResult.totalCostCents / 100) {
+                        setState(() {
+                          loading = false;
+                        });
+                        Fluttertoast.showToast(
+                          msg: 'Something went wrong',
+                          toastLength: Toast.LENGTH_LONG,
+                        );
+                      } else {
+                        setState(() {
+                          loading = false;
+                        });
+
+                        Fluttertoast.showToast(
+                          msg: 'Payment is successful',
+                          toastLength: Toast.LENGTH_LONG,
+                        );
+                        Future.delayed(const Duration(milliseconds: 1200),
+                            () async {
+                          final projectName =
+                              await seller.getProjectNameBySellerId(
+                                  items.items[0]['sellerId'] ?? '');
+                          await orders.addOrder(
+                            buyerId: buyer.buyer?.buyerId,
+                            sellerId: items.items[0]['sellerId'],
+                            items: items.items,
+                            orderstatus: 'Pending',
+                            buyerName: buyer.buyer?.username,
+                            projectName: projectName,
+                            notes: widget.notes,
+                            payment: 'visa',
+                            timeStamp: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
+                          );
+                          items.items.removeWhere((element) => true);
+                          items.updateItems(items.items);
+                          Fluttertoast.showToast(
+                            msg: 'Your order has been sent',
+                            toastLength: Toast.LENGTH_LONG,
+                          );
+                          Navigator.pop(context);
+                        });
+                      }
                     }
                   });
                 },

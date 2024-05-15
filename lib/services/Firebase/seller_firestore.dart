@@ -45,6 +45,9 @@ class SellerFirestore extends ChangeNotifier {
       'projectName': projectName,
       'category': category,
       'chats': [],
+      'rating': '0',
+      'ratingCount': '0',
+      'ratingSum': '0',
     };
     DocumentReference docRef = await _sellerCollection.add(userData);
     String sellerId = docRef.id;
@@ -98,7 +101,8 @@ class SellerFirestore extends ChangeNotifier {
 
   Future<List<SellerModel>> getAllSellers() async {
     try {
-      QuerySnapshot querySnapshot = await _sellerCollection.get();
+      QuerySnapshot querySnapshot =
+          await _sellerCollection.orderBy('rating', descending: true).get();
       List<SellerModel> sellers = [];
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         sellers.add(SellerModel.fromMap(doc.data() as Map<String, dynamic>));
@@ -113,8 +117,10 @@ class SellerFirestore extends ChangeNotifier {
 
   Future<List<SellerModel>> getSellersByCategory(String category) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _sellerCollection.where('category', isEqualTo: category).get();
+      QuerySnapshot querySnapshot = await _sellerCollection
+          .where('category', isEqualTo: category)
+          .orderBy('rating', descending: true)
+          .get();
       List<SellerModel> sellers = [];
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         sellers.add(SellerModel.fromMap(doc.data() as Map<String, dynamic>));
@@ -153,8 +159,13 @@ class SellerFirestore extends ChangeNotifier {
     loadSellerData();
   }
 
-  Future<void> updateSellerByID(
-      {required String? sellerID, List<dynamic>? chats}) async {
+  Future<void> updateSellerByID({
+    required String? sellerID,
+    List<dynamic>? chats,
+    String? rating,
+    String? ratingCount,
+    String? ratingSum,
+  }) async {
     final docSnap = await _sellerCollection
         .where('sellerId', isEqualTo: sellerID)
         .limit(1)
@@ -163,6 +174,24 @@ class SellerFirestore extends ChangeNotifier {
     if (chats != null) {
       doc.reference.update({'chats': chats});
     }
+    if (rating != null) {
+      doc.reference.update({'rating': rating});
+    }
+    if (ratingCount != null) {
+      doc.reference.update({'ratingCount': ratingCount});
+    }
+    if (ratingSum != null) {
+      doc.reference.update({'ratingSum': ratingSum});
+    }
+  }
+
+  Future<SellerModel> getSellerByID({required sellerID}) async {
+    final querySnapshot = await _sellerCollection
+        .where('sellerId', isEqualTo: sellerID)
+        .limit(1)
+        .get();
+    return SellerModel.fromMap(
+        querySnapshot.docs.first.data() as Map<String, dynamic>);
   }
 
   final picker = ImagePicker();

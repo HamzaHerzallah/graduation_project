@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/Models/order_model.dart';
 import 'package:graduation_project/services/Firebase/buyer_firestore.dart';
 import 'package:graduation_project/services/Firebase/order_firestore.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/rating.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BuyerOrdersPage extends StatelessWidget {
   const BuyerOrdersPage({super.key});
@@ -168,8 +170,29 @@ class BuyerOrdersPage extends StatelessWidget {
                                             onPressed: () async {
                                               await orderFirestore
                                                   .updateOrderStatus(
-                                                      order.orderId ?? '',
-                                                      'Delivered');
+                                                order.orderId ?? '',
+                                                'Delivered',
+                                              );
+                                              final SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              await prefs.setBool(
+                                                  'rated', false);
+                                              await prefs.setString(
+                                                  'projectName',
+                                                  order.projectName ?? '');
+                                              await prefs.setString('sellerId',
+                                                  order.sellerId ?? '');
+                                              // ignore: use_build_context_synchronously
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => Rating(
+                                                  projectName:
+                                                      order.projectName ?? '',
+                                                  sellerId:
+                                                      order.sellerId ?? '',
+                                                ),
+                                              );
                                             },
                                             child: const Text('Delivered'),
                                           )

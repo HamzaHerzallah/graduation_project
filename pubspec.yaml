@@ -28,6 +28,10 @@ dependencies:
   http: ^1.1.0
   meta:
   checkout_screen_ui: ^1.0.1
+  rating_dialog: ^2.0.4
+  shared_preferences: ^2.2.3
+  custom_rating_bar: ^2.0.5
+  flutter_pannable_rating_bar: ^2.7.2+1
 
 dev_dependencies:
   flutter_test:

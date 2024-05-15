@@ -98,8 +98,6 @@ class MyApp extends StatelessWidget {
             SellerChatPage.routeName: (context) => const SellerChatPage(),
           },
           home: const PageSplachScreen(),
-          // home: PageHomeSeller(),
-          // home: ProfilePageSeller(),
         ),
       ),
     );

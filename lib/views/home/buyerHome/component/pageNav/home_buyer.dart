@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:graduation_project/Models/seller_model.dart';
 import 'package:graduation_project/services/Firebase/user_auth.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_chat_page.dart';
+import 'package:graduation_project/views/home/buyerHome/component/pageNav/rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'item_card.dart';
 import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/services/Firebase/seller_firestore.dart';
@@ -27,6 +30,30 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
             .toLowerCase()
             .contains(searchText.toLowerCase()))
         .toList();
+  }
+
+  void checkRated() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool? rated = prefs.getBool('rated');
+    final String? projectName = prefs.getString('projectName');
+    final String? sellerId = prefs.getString('sellerId');
+    if (!(rated ?? true)) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (context) => Rating(
+          projectName: projectName ?? '',
+          sellerId: sellerId ?? '',
+        ),
+      );
+    }
+    await prefs.setBool('rated', true);
+  }
+
+  @override
+  void initState() {
+    checkRated();
+    super.initState();
   }
 
   @override
@@ -153,6 +180,24 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
                                         'Category: ${sellerModel.category}',
                                         style: const TextStyle(fontSize: 14),
                                       ),
+                                      const SizedBox(height: 4),
+                                      PannableRatingBar(
+                                        rate: double.parse(
+                                          sellerModel.rating ?? '0',
+                                        ),
+                                        items: List.generate(
+                                          5,
+                                          (index) => const RatingWidget(
+                                            selectedColor: Colors.amber,
+                                            unSelectedColor: Colors.grey,
+                                            child: Icon(
+                                              Icons.star,
+                                              size: 25,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                   trailing: Container(

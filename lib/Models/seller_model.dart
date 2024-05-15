@@ -9,6 +9,8 @@ class SellerModel {
     this.chats,
     this.sellerId,
     this.sellerUID,
+    this.rating,
+    this.ratingCount,
   });
 
   String? email;
@@ -20,6 +22,9 @@ class SellerModel {
   String? category;
   List<dynamic>? chats;
   String? projectName;
+  String? rating;
+  String? ratingCount;
+  String? ratingSum;
 
   SellerModel.fromMap(Map<String, dynamic> data)
       : assert(data.isNotEmpty),
@@ -31,7 +36,10 @@ class SellerModel {
         sellerId = data['sellerId'],
         sellerUID = data['sellerUID'],
         category = data['category'],
-        chats = data['chats'];
+        chats = data['chats'],
+        rating = data['rating'],
+        ratingCount = data['ratingCount'],
+        ratingSum = data['ratingSum'];
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -44,6 +52,9 @@ class SellerModel {
     data['sellerUID'] = sellerUID;
     data['chats'] = chats;
     data['category'] = category;
+    data['rating'] = rating;
+    data['ratingCount'] = ratingCount;
+    data['ratingSum'] = ratingSum;
     return data;
   }
 }
