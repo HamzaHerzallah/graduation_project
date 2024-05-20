@@ -1,10 +1,12 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:graduation_project/services/Firebase/item_firestore.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/cart_buyer.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_chats_page.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/home_buyer.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/buyer_orders_page.dart';
 import 'package:graduation_project/views/home/buyerHome/component/pageNav/profile_buyer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PageHomeBuyer extends StatefulWidget {
   const PageHomeBuyer({super.key});
@@ -25,6 +27,7 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
 
   @override
   Widget build(BuildContext context) {
+    final ItemFirestore items = Provider.of<ItemFirestore>(context);
     pageNav = [
       const HomePageBuyer(),
       const BuyerOrdersPage(),
@@ -38,20 +41,25 @@ class _PageHomeBuyerState extends State<PageHomeBuyer> {
         appBar: indexPage != 0 ? bulidAppBar(context) : null,
         body: pageNav[indexPage],
         floatingActionButton: indexPage == 0
-            ? FloatingActionButton.extended(
-                backgroundColor: Colors.deepPurple,
-                label: const Text('Cart'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CartPageBuyer(),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.shopping_cart,
-                  size: 25,
+            ? Badge(
+                label: Text('${items.items.length}'),
+                largeSize: 18,
+                alignment: Alignment.topLeft,
+                child: FloatingActionButton.extended(
+                  backgroundColor: Colors.deepPurple,
+                  label: const Text('Cart'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CartPageBuyer(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                    size: 25,
+                  ),
                 ),
               )
             : null,

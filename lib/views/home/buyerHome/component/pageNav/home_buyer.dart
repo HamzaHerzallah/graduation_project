@@ -147,16 +147,69 @@ class _HomePageBuyerState extends State<HomePageBuyer> {
                                 },
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.all(16),
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: sellerModel
-                                                .profilePicture !=
-                                            ''
-                                        ? NetworkImage(
-                                            sellerModel.profilePicture ?? '')
-                                        : const AssetImage(
-                                                'assets/images/defaultAvatar.png')
-                                            as ImageProvider,
+                                  leading: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                            sellerModel.projectName ?? '',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: Colors.deepPurple,
+                                            ),
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'User Name: ',
+                                                    style: TextStyle(
+                                                      color: Colors.deepPurple,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${sellerModel.username}',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[800],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'Phone Number: ',
+                                                    style: TextStyle(
+                                                      color: Colors.deepPurple,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${sellerModel.phoneNumber}',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[800],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: sellerModel
+                                                  .profilePicture !=
+                                              ''
+                                          ? NetworkImage(
+                                              sellerModel.profilePicture ?? '')
+                                          : const AssetImage(
+                                                  'assets/images/defaultAvatar.png')
+                                              as ImageProvider,
+                                    ),
                                   ),
                                   title: Text(
                                     sellerModel.projectName ?? '',

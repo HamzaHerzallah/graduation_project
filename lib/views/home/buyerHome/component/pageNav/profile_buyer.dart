@@ -6,6 +6,7 @@ import 'package:graduation_project/views/login_signup/component/button.dart';
 import 'package:graduation_project/views/login_signup/login/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePageBuyer extends StatefulWidget {
   const ProfilePageBuyer({super.key});
@@ -263,6 +264,9 @@ class ProfileMenuWidget extends StatelessWidget {
         onTap: () async {
           if (title == 'Log Out') {
             await auth.signOut();
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            await prefs.setBool('rated', true);
             if (context.mounted) {
               Phoenix.rebirth(context);
             }
