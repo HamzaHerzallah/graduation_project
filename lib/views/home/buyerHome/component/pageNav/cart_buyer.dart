@@ -146,7 +146,7 @@ class _CartPageBuyerState extends State<CartPageBuyer> {
                             MaterialPageRoute(
                               builder: (context) => PaymentPage(
                                 items: items.items,
-                                notes: notesController.text,
+                                notes: notesController,
                               ),
                             ),
                           );

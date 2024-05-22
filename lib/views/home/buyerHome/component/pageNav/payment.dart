@@ -11,10 +11,10 @@ import 'package:graduation_project/services/Firebase/seller_firestore.dart';
 import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key, this.items, this.notes = ''});
+  const PaymentPage({super.key, this.items, required this.notes});
 
   final items;
-  final String notes;
+  final TextEditingController notes;
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -119,7 +119,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             orderstatus: 'Pending',
                             buyerName: buyer.buyer?.username,
                             projectName: projectName,
-                            notes: widget.notes,
+                            notes: widget.notes.text,
                             payment: 'visa',
                             timeStamp: DateTime.now()
                                 .millisecondsSinceEpoch
@@ -127,6 +127,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           );
                           items.items.removeWhere((element) => true);
                           items.updateItems(items.items);
+                          widget.notes.clear();
                           Fluttertoast.showToast(
                             msg: 'Your order has been sent',
                             toastLength: Toast.LENGTH_LONG,
@@ -147,12 +148,13 @@ class _PaymentPageState extends State<PaymentPage> {
                     orderstatus: 'Pending',
                     buyerName: buyer.buyer?.username,
                     projectName: projectName,
-                    notes: widget.notes,
+                    notes: widget.notes.text,
                     payment: 'cash',
                     timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
                   );
                   items.items.removeWhere((element) => true);
                   items.updateItems(items.items);
+                  widget.notes.clear();
                   Fluttertoast.showToast(
                     msg: 'Your order has been sent',
                     toastLength: Toast.LENGTH_LONG,
