@@ -6,6 +6,7 @@ import 'package:graduation_project/views/login_signup/component/button.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
 class ProfilePageSeller extends StatefulWidget {
   const ProfilePageSeller({super.key});
@@ -141,6 +142,23 @@ class _ProfilePageSellerState extends State<ProfilePageSeller> {
                   color: Colors.deepPurple[400],
                 ),
               ),
+              PannableRatingBar(
+                rate: double.parse(
+                  seller.seller?.rating ?? '0',
+                ),
+                items: List.generate(
+                  5,
+                  (index) => const RatingWidget(
+                    selectedColor: Colors.amber,
+                    unSelectedColor: Colors.grey,
+                    child: Icon(
+                      Icons.star,
+                      size: 25,
+                      color: Colors.amber,
+                    ),
+                  ),
+                ),
+              ),
               Text(
                 seller.seller?.email ?? '',
                 style: TextStyle(fontSize: 20, color: Colors.grey[700]),
@@ -220,6 +238,7 @@ class _ProfilePageSellerState extends State<ProfilePageSeller> {
                                     username: usernameController.text,
                                     phoneNumber: phoneNumberController.text,
                                   );
+
                                   if (mounted) {
                                     Navigator.pop(context);
                                   }

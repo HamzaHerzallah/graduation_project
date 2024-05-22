@@ -49,6 +49,7 @@ class OrderFirestore extends ChangeNotifier {
   Stream<List<OrderModel>> getOrdersForBuyerStream(String buyerId) {
     return _orderCollection
         .where('buyerId', isEqualTo: buyerId)
+        .orderBy('timeStamp', descending: true)
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs.map((doc) {

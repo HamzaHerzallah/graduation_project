@@ -43,7 +43,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final SellerFirestore seller = Provider.of<SellerFirestore>(context);
     final ItemFirestore items = Provider.of<ItemFirestore>(context);
 
-    final times = [3, 4, 5];
+    final times = [2, 3, 4];
     final random = Random();
     final randomDuration = times[random.nextInt(times.length)];
 
